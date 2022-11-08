@@ -75,9 +75,11 @@ int main(int argc, char *argv[])
     }
     char value[24];
     memset(value, 0, 24);
-    memcpy(value, argv[3] + 1, strlen(argv[3] - 2));
+    memcpy(value, argv[3], strlen(argv[3]));
 
     sprintf(buffer, "SET %s %s\n", argv[2], value);
+    cout << "key is " << argv[2] << " and value is " << argv[3] << endl;
+    cout << "buffer is " << buffer << endl;
    }
 
    /* Send message to the server */

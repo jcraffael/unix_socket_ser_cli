@@ -174,7 +174,7 @@ unsigned short set_value(const std::string& key, const std::string &value)
         }
         else
         {
-            buf_map.append(key + " = " + value);
+            buf_map.append(key + " = " + value + '\n') ;
         }
         char *buf_in_char = new char[buf_map.length() + 1];
         std::strcpy(buf_in_char, buf_map.c_str());
@@ -188,7 +188,7 @@ unsigned short set_value(const std::string& key, const std::string &value)
         ofstream out_file;
         out_file.open(path_val);
         if(!out_file) return 255;
-        out_file << buf_in_char + '\n';
+        out_file << buf_in_char;
         delete(buf_in_char);
         return 0;
        

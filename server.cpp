@@ -121,18 +121,17 @@ void init_unix_socket()
    
    listen(sockfd,5);
    clilen = sizeof(cli_addr);
-
-   printf("Waiting for connection from client...\n");
-   /* Accept actual connection from the client */
-   newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, (socklen_t *)&clilen);
-	
-   if (newsockfd < 0) {
-      perror("ERROR on accept");
-      exit(1);
-   }
    
    while(1)
    {
+    printf("Waiting for connection from client...\n");
+    /* Accept actual connection from the client */
+    newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, (socklen_t *)&clilen);
+        
+    if (newsockfd < 0) {
+        perror("ERROR on accept");
+        exit(1);
+    }
     printf("Connection accepted, waiting for data from the client\n");
     /* If connection is established then start communicating */
     bzero(buffer,256);
@@ -140,7 +139,7 @@ void init_unix_socket()
     
     if (sent_recv_bytes < 0) {
         perror("ERROR reading from socket");
-        exit(1);
+        continue;
     }
     
     printf("Server recvd %d bytes from client\n", sent_recv_bytes);
@@ -168,6 +167,8 @@ void init_unix_socket()
         cout << "key is " << key << " and value is " << value << endl;
         res = set_value(key, value);
     }
+    else
+        continue;
 
     memset(buffer, 0, BUF_SIZE);
     sprintf(buffer, "%u %s\n", res, k_value.length() ? k_value.c_str() : "");
