@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "lib_shared/lib_shared.h"
+#include "libshared/lib_shared.h"
 
 #define UDP_PORT 12345
 #define BUF_SIZE 256
@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
    if(argc < 2) exit(0);
    int sockfd, sent_recv_bytes = 0;
    struct sockaddr_in serv_addr;
-   struct hostent *server;
+   
    
    char buffer[BUF_SIZE];
 

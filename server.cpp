@@ -5,7 +5,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <csignal>
-#include "lib_shared/lib_shared.h"
+#include "libshared/lib_shared.h"
 
 #define UDP_PORT 12345
 #define BUF_SIZE 256
@@ -161,7 +161,10 @@ void init_unix_socket()
     uint16_t res;
     //cout << "action is " << action << " and content is " << content << endl;
     if(action == "LOAD")
-        res = load_resource(content);
+    {
+        string path = content;
+        res = load_resource(path);
+    }
     else if(action == "GET")
     {
         string key = content;

@@ -1,27 +1,35 @@
 CC = g++
 CFLAGS = -Wall -Wextra
-TARGET = server
-//LIBS = -L ./lib_shared -lshard
-DEPSRC = lib_shared/lib_shared.cpp
-default:
-	$(CC) $(CFLAGS) -g server.cpp $(DEPSRC) -o server -lrt
-	$(CC) $(CFLAGS) -g client.cpp $(DEPSRC) -o client -lrt
-# server.o: server.cpp
-# 	$(CC) $(CFLAGS) -c server.cpp -o server.o
+TARGET = server libshared/lib_shared.so client
+LIBS = -L ./libshared -lshared -lrt
+OBJ = server.o client.o
+#DEPSRC = lib_shared/lib_shared.cpp
+# default:
+# 	 $(CC) $(CFLAGS) -g server.cpp $(DEPSRC) -o server -lrt
+# 	 $(CC) $(CFLAGS) -g client.cpp $(DEPSRC) -o client -lrt
 
-# server: server.o lib_shared/lib_shared.a
-# 	$(CC) $(CFLAGS) server.o -o server ${LIBS}
+server: server.o libshared/lib_shared.so
+	$(CC) $(CFLAGS) server.o -o server ${LIBS}
+
+server.o: server.cpp
+	$(CC) $(CFLAGS) -c -I libshared server.cpp -o server.o
 
 # server: server.cpp lib_shared/lib_shared.a
 #  	$(CC) $(CFLAGS) server.cpp lib_shared/lib_shared.a -o server
 
-# lib_shared/lib_shared.a:
-# 	(cd lib_shared; make)
+libshared/lib_shared.so:
+	(cd libshared; make)
 
-# all:
-# 	make
-# 	(cd lib_shared; make)
+client: client.o
+	$(CC) $(CFLAGS) client.o -o client
+
+client.o: client.cpp
+	$(CC) $(CFLAGS) -c client.cpp -o client.o
+
+all:
+	make
+	(cd lib_shared; make)
 
 clean:
 	rm -f *.o
-
+	(cd libshared; make clean)
