@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "libshared/lib_shared.h"
+#include "libshared/libshared.hpp"
 
 #define UDP_PORT 12345
 #define BUF_SIZE 256

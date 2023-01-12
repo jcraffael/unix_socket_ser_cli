@@ -1,4 +1,4 @@
-#include "lib_shared.h"
+#include "libshared.hpp"
 #define BUF_SIZE 256
 using namespace std;
 

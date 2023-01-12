@@ -1,14 +1,11 @@
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <unistd.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #include <csignal>
-#include "libshared/lib_shared.h"
+#include "libshared/libshared.hpp"
+#include "int_socket_ser.hpp"
 
 #define UDP_PORT 12345
 #define BUF_SIZE 256
+#define DESTINATION "127.0.0.1"
 using namespace std;
 
 void signal_handler(int)
@@ -91,56 +88,65 @@ void signal_handler(int)
 
 // }
 
-void init_unix_socket()
+void init_int_socket()
 {
     string action;
     string content;
     
-   int sockfd, newsockfd, clilen;
+   int sockfd, newsockfd;
    char buffer[BUF_SIZE];
-   struct sockaddr_in serv_addr, cli_addr;
+   struct sockaddr_in serv_addr; //, cli_addr;
    int sent_recv_bytes;
    
-   
+   int_socket_ser server = int_socket_ser(AF_INET, SOCK_STREAM, 0, UDP_PORT, DESTINATION);
+   //server.test_socket();
+    sockfd = server.get_sock();
+    serv_addr = server.get_addr();
+   server.connect_to(sockfd, serv_addr);
+   server.test_new_connection();
+   server.listen_to_connection(sockfd, 5);
+
    /* First call to socket() function */
-   sockfd = socket(AF_INET, SOCK_STREAM, 0);
+//    sockfd = socket(AF_INET, SOCK_STREAM, 0);
    
-   if (sockfd < 0) {
-      perror("ERROR opening socket");
-      exit(1);
-   }
+//    if (sockfd < 0) {
+//       perror("ERROR opening socket");
+//       exit(1);
+//    }
    
-   /* Initialize socket structure */
-   memset((char *) &serv_addr, 0, sizeof(serv_addr));
+//    /* Initialize socket structure */
+//    memset((char *) &serv_addr, 0, sizeof(serv_addr));
    
    
-   serv_addr.sin_family = AF_INET;
-   serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");;
-   serv_addr.sin_port = htons(UDP_PORT);
-    /* Now bind the host address using bind() call.*/
-   if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
-      perror("ERROR on binding");
-      exit(1);
-   }
+//    serv_addr.sin_family = AF_INET;
+//    serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");;
+//    serv_addr.sin_port = htons(UDP_PORT);
+//     /* Now bind the host address using bind() call.*/
+//    if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
+//       perror("ERROR on binding");
+//       exit(1);
+//    }
       
-   /* Now start listening for the clients, here process will
-      * go in sleep mode and will wait for the incoming connection
-   */
+//    /* Now start listening for the clients, here process will
+//       * go in sleep mode and will wait for the incoming connection
+//    */
    
-   listen(sockfd,5);
-   clilen = sizeof(cli_addr);
+//    listen(sockfd,5);
+//    clilen = sizeof(cli_addr);
    
    while(1)
    {
     signal(SIGINT, signal_handler);//(sighandler_t *)signal_handler);
     printf("Waiting for connection from client...\n");
     /* Accept actual connection from the client */
-    newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, (socklen_t *)&clilen);
-        
-    if (newsockfd < 0) {
-        perror("ERROR on accept");
-        exit(1);
-    }
+    //newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, (socklen_t *)&clilen);
+    newsockfd = server.get_newfd();
+    server.test_new_connection();
+
+    // if (newsockfd < 0) {
+    //     perror("ERROR on accept");
+    //     exit(1);
+    // }
     printf("Connection accepted, waiting for data from the client\n");
     /* If connection is established then start communicating */
     memset(buffer, 0, BUF_SIZE);
@@ -190,14 +196,14 @@ void init_unix_socket()
     printf("Server sent %d bytes in reply to client\n", sent_recv_bytes);
 
    }
-   close(sockfd);
+   //close(sockfd);
    
 }
 int
 main(int argc, char *argv[])
 {
 
-    init_unix_socket();
+    init_int_socket();
 
     exit(EXIT_SUCCESS);
 }
