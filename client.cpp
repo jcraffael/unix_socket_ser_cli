@@ -1,13 +1,10 @@
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <unistd.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include "libshared/libshared.hpp"
+
+//include "libshared/libshared.hpp"
+#include "int_socket_cli.hpp"
 
 #define UDP_PORT 12345
 #define BUF_SIZE 256
+#define DESTINATION "127.0.0.1"
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -21,29 +18,11 @@ int main(int argc, char *argv[])
 
    
    /* Create a socket point */
-   sockfd = socket(AF_INET, SOCK_STREAM, 0);
+   int_socket_cli client = int_socket_cli(AF_INET, SOCK_STREAM, 0, UDP_PORT, DESTINATION);
+   sockfd = client.get_sock();
+   serv_addr = client.get_addr();
+   client.connect_to(sockfd, serv_addr);
    
-   if (sockfd < 0) {
-      perror("ERROR opening socket");
-      exit(1);
-   }
-	
-   
-   //bzero((char *) &serv_addr, sizeof(serv_addr));
-   serv_addr.sin_family = AF_INET;
-   serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-   
-   serv_addr.sin_port = htons(UDP_PORT);
-   
-   /* Now connect to the server */
-   if (connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
-      perror("ERROR connecting");
-      exit(1);
-   }
-   
-   /* Now ask for a message from the user, this message
-      * will be read by server
-   */
    memset(buffer, 0, BUF_SIZE);
 
    string action(argv[1]);
@@ -78,11 +57,12 @@ int main(int argc, char *argv[])
     memcpy(value, argv[3], strlen(argv[3]));
 
     sprintf(buffer, "SET %s %s\n", argv[2], value);
-    //cout << "key is " << argv[2] << " and value is " << argv[3] << endl;
-    //cout << "buffer is " << buffer << endl;
+    cout << "key is " << argv[2] << " and value is " << argv[3] << endl;
+    cout << "buffer is " << buffer << endl;
    }
 
    /* Send message to the server */
+   cout << "Sending request to the server ..." << endl;
    sent_recv_bytes = write(sockfd, buffer, BUF_SIZE);
    
    if (sent_recv_bytes < 0) {

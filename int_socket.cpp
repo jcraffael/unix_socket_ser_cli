@@ -8,6 +8,7 @@ int_socket::int_socket(int domain, int type, int protocol, int port, char* ip_ad
         perror("Error opening socket ...");
         exit(1);
     }
+    
     addr.sin_family = domain;
     addr.sin_addr.s_addr = inet_addr(ip_addr);
     addr.sin_port = htons(port);

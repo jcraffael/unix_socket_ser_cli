@@ -4,6 +4,7 @@ using namespace std;
 
 char mkey[] = "shmfile";
 string path_val;
+fstream in_file;
 int
 _create_and_write_shared_memory (char *mmap_key, const char *value, unsigned int size){
     
@@ -75,6 +76,7 @@ _read_from_shared_memory (char *mmap_key,
         printf("munmap failed\n");
         return -1;
     }
+    cout << "buffer from reading shm: " << buffer << endl;
     close(shm_fd);
     //return bytes_to_read; /*Return the number of bytes read */
     return strlen(buffer);
@@ -87,27 +89,31 @@ unsigned short load_resource(string path)
     string line;
     //string mk, mv;
     uint32_t buf_size;
-    //path_val = path;
-    ifstream in_file;
-    in_file.open(path);
-    if(!in_file.is_open()) return 1;
-
-    while(getline(in_file, line))
+    path_val = path;
+    
+    in_file.open(path, ios::out);
+    if(!in_file.is_open()) 
     {
-        buffer.append(line + '\n');
+        perror("Resource file open error ..."); 
+        return 1;
     }
+    cout << "File " << path << " opened correctly" << endl;
+    // while(getline(in_file, line))
+    // {
+    //     buffer.append(line + '\n');
+    // }
     in_file.close();
 
-    buf_size = buffer.length();
+    //buf_size = buffer.length();
     //char* buf_in_char = buffer.c_str();
     //char *buf_in_char = (char *)malloc(buf_size + 1);
     //memcpy(buf_in_char, buffer.c_str(), buf_size + 1);
 
     
-    int ret = _create_and_write_shared_memory (mkey, buffer.c_str(), buf_size + 1);
-    if(ret == -1)
-        return 255;
-
+    // int ret = _create_and_write_shared_memory (mkey, buffer.c_str(), buf_size + 1);
+    // if(ret == -1)
+    //     return 255;
+    //cout << "Shared mem created with buffer: " << buffer << endl;
     return 0;
     
 
@@ -116,7 +122,7 @@ unsigned short load_resource(string path)
 unsigned short _get_buffer(char* buffer)
 {
     int read_size = _read_from_shared_memory (mkey, buffer, BUF_SIZE);
-
+    cout << buffer << endl;
     if(read_size == -1) return 255;
     if(read_size == 0) return 4;
     
@@ -128,24 +134,42 @@ unsigned short get_value(const string& key, string& value)
      
     char buffer[BUF_SIZE];
     memset(buffer, 0, BUF_SIZE);
-    int res = _get_buffer(buffer);
-    if(res == 0)
+    //int res = _get_buffer(buffer);
+    string line {};
+    if(!path_val.empty())
     {
-        int pos_key;
-        string buf_map(buffer);
-        if((pos_key = buf_map.find(key)) != string::npos)
+        //int pos_key;
+        //string buf_map(buffer);
+        in_file.open(path_val, fstream::in);
+        if(!in_file.is_open()) 
         {
-            
-            int pos_break;
-            if((pos_break = buf_map.find("\n", pos_key)) == string::npos) return 255;
-            value = buf_map.substr(pos_key + key.length() + 3 , pos_break - (pos_key + key.length() + 3));
-            //return res;
+            perror("Resource file open error ..."); 
+            return 1;
         }
-        else
-            return 3;
+        while(getline(in_file, line))
+        {
+            if(line.find(key)!= string::npos)
+            {
+                value = line.substr(key.length() + 3, line.length() - key.length() - 3);
+                in_file.close();
+                return 0;
+            }
+                
+        }
+        in_file.close();
+        // if((pos_key = buf_map.find(key)) != string::npos)
+        // {
+            
+        //     int pos_break;
+        //     if((pos_break = buf_map.find("\n", pos_key)) == string::npos) return 255;
+        //     value = buf_map.substr(pos_key + key.length() + 3 , pos_break - (pos_key + key.length() + 3));
+        //     return 0;
+        // }
+        // else
+        return 3;
 
     }
-    return res;
+    return 255;
 
 }
 
@@ -153,37 +177,65 @@ unsigned short set_value(const std::string& key, const std::string &value)
 {
     char buffer[BUF_SIZE];
     memset(buffer, 0, BUF_SIZE);
-    int res = _get_buffer(buffer);
-    if(res == 0)
+    //int res = _get_buffer(buffer);
+    string line {};
+    
+    if(!path_val.empty())
     {
-        int pos_key;
-        string buf_map(buffer);
-        if((pos_key = buf_map.find(key)) != string::npos)
+        in_file.open(path_val.c_str(), fstream::out | fstream::in | fstream::trunc);
+        //ofstream in_file(path_val, ios::in | ios::out);
+        cout << "File " << path_val << " opened correctly" << endl;
+        if(!in_file.is_open()) 
         {
-            int pos_break;
-            if((pos_break = buf_map.find("\n", pos_key)) == string::npos) return 255;
-            buf_map.replace(pos_key + key.length() + 3 , pos_break - (pos_key + key.length() + 3), value);
+            perror("Resource file open error ..."); 
+            return 1;
         }
-        else
+        while(getline(in_file, line))
         {
-            buf_map.append(key + " = " + value + '\n') ;
+            if(line.find(key)!= string::npos)
+            {
+                line.replace(key.length() + 3, line.length() - key.length() - 3, value);
+                cout << "Value replaced with " << endl;
+                in_file.close();
+                return 0;
+            }
+                
         }
-        char *buf_in_char = new char[buf_map.length() + 1];
-        std::strcpy(buf_in_char, buf_map.c_str());
-        //mkey = ftok("shmfile",65); 
+        in_file.clear();
+        in_file.seekg(0);
+        in_file << key << " : " << value << "\n";
+       
         
-        int ret = _create_and_write_shared_memory (mkey, buf_in_char, buf_map.length() + 1);
-        if(ret == -1)
-            return 255;
+        in_file.close();
+        // int pos_key;
+        // string buf_map(buffer);
+        // if((pos_key = buf_map.find(key)) != string::npos)
+        // {
+        //     int pos_break;
+        //     if((pos_break = buf_map.find("\n", pos_key)) == string::npos) return 255;
+        //     buf_map.replace(pos_key + key.length() + 3 , pos_break - (pos_key + key.length() + 3), value);
+        // }
+        // else
+        // {
+        //     buf_map.append(key + " : " + value + '\n') ;
+        //     cout << buf_map << endl;
+        // }
+        // char *buf_in_char = new char[buf_map.length() + 1];
+        // std::strcpy(buf_in_char, buf_map.c_str());
+        // //mkey = ftok("shmfile",65); 
+        // cout << "Set value: " << buf_in_char << endl;
+        // int ret = _create_and_write_shared_memory (mkey, buf_in_char, buf_map.length() + 1);
+        // if(ret == -1)
+        //     return 255;
         
 
-        ofstream out_file;
-        out_file.open(path_val);
-        if(!out_file) return 255;
-        out_file << buf_in_char;
-        delete(buf_in_char);
+        // ofstream out_file;
+        // out_file.open(path_val);
+        // if(!out_file) return 255;
+        // out_file << buf_in_char;
+        // delete(buf_in_char);
         return 0;
        
     }
-    return res;
+    return 255;
 }

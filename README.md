@@ -4,7 +4,7 @@
 
   ```unsigned short load_resource(const std::string& path);```
 
-allows an application to load and parse in volatile memory a INI resource filelocated in a standard Linux filesystemexample:
+allows an application to load and parse in volatile memory a INI resource filelocated in a standard Linux file system. example:
 
   ```unsigned short res =load_resource(“/tmp/example.ini”);```
 
@@ -12,19 +12,19 @@ return values: 0 in case of success, 1 in case of read errors, 255 in case of ge
 
   ```unsigned short get_value(const std::string& key,std::string& value);```
 
-allows an application to retrieve the value of a key available in a previouslyloaded INI fileexample: 
+allows an application to retrieve the value of a key available in a previously loaded INI file. example: 
 
   ```std::string buffer; unsigned short res =get_value(“section.foo.bar”, buffer);```
 
-return values: 0 in case of success, 3 in case of missing key, 4 in case aresource file has not been loaded yet, 255 in case of generic error○
+return values: 0 in case of success, 3 in case of missing key, 4 in case a resource file has not been loaded yet, 255 in case of generic error○
 
   ```unsigned short set_value(const std::string& key, conststd::string &value);```
 
-allows an application to store the value of a key in a previously loaded INI file.This adds or replace the new key/value pair both in the volatile memory and in the INI file on the filesystem.example:
+allows an application to store the value of a key in a previously loaded INI file. This adds or replace the new key/value pair both in the volatile memory and in the INI file on the file system. example:
 
   ```unsigned short res =set_value(“section.color.red”, “roses are red”);```
 
- return values: 0 in case of success, 4 in case a resource file has not beenloaded yet, 255 in case of generic error.
+ return values: 0 in case of success, 4 in case a resource file has not been loaded yet, 255 in case of generic error.
 
 2.A C++ Server application able to use the above mentioned shared library and to expose a basic API to localhost:12345. The server shall expose the following APIs(every API must end with a \n character):
 
