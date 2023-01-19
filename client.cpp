@@ -2,9 +2,7 @@
 //include "libshared/libshared.hpp"
 #include "int_socket_cli.hpp"
 
-#define UDP_PORT 12345
-#define BUF_SIZE 256
-#define DESTINATION "127.0.0.1"
+
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -59,6 +57,10 @@ int main(int argc, char *argv[])
     sprintf(buffer, "SET %s %s\n", argv[2], value);
     cout << "key is " << argv[2] << " and value is " << argv[3] << endl;
     cout << "buffer is " << buffer << endl;
+   }
+   else
+   {
+      ;
    }
 
    /* Send message to the server */

@@ -3,9 +3,6 @@
 #include "libshared/libshared.hpp"
 #include "int_socket_ser.hpp"
 
-#define UDP_PORT 12345
-#define BUF_SIZE 256
-#define DESTINATION "127.0.0.1"
 using namespace std;
 
 void signal_handler(int)
@@ -29,7 +26,6 @@ void init_int_socket()
    //server.test_socket();
    
     sockfd = server.get_sock();
-    cout << "Sock is " << sockfd << endl;
     serv_addr = server.get_addr();
     server.binding(sockfd, serv_addr);
 
@@ -39,18 +35,13 @@ void init_int_socket()
    {
     
     signal(SIGINT, signal_handler);//(sighandler_t *)signal_handler);
-    printf("Waiting for connection from client...\n");
+    cout << "Waiting for connection from client...\n";
     /* Accept actual connection from the client */
     //newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, (socklen_t *)&clilen);
     server.connect_to(sockfd, serv_addr);
     newsockfd = server.get_newfd();
-    //server.test_new_connection();
 
-    // if (newsockfd < 0) {
-    //     perror("ERROR on accept");
-    //     exit(1);
-    // }
-    printf("Connection accepted, waiting for data from the client\n");
+    cout << "Connection accepted, waiting for data from the client\n";
     /* If connection is established then start communicating */
     memset(buffer, 0, BUF_SIZE);
     sent_recv_bytes = read(newsockfd, buffer, BUF_SIZE);
@@ -76,11 +67,6 @@ void init_int_socket()
     }
     else if(action == "GET")
     {
-        if(path.empty())
-        {
-            cout << "No file available ..." << endl;
-            continue;
-        }
         string key = content;
         //string value;
         res = get_value(key, k_value);
@@ -88,28 +74,22 @@ void init_int_socket()
     }
     else if(action == "SET")
     {
-        if(path.empty())
-        {
-            cout << "No file available ..." << endl;
-            continue;
-        }
         string key = content.substr(0, content.find(" "));
         string value = content.erase(0, content.find(" ") + 1);
-        cout << "key is " << key << " and value is " << value << endl;
+        //cout << "key is " << key << " and value is " << value << endl;
         res = set_value(key, value);
     }
     else
-        continue;
+        res = 127;
 
     memset(buffer, 0, BUF_SIZE);
     sprintf(buffer, "%u %s\n", res, k_value.length() ? k_value.c_str() : "");
 
-    printf("sending final result back to client\n");
+    cout << "sending final result back to client\n";
     sent_recv_bytes = write(newsockfd, buffer, BUF_SIZE);
     printf("Server sent %d bytes in reply to client\n", sent_recv_bytes);
 
    }
-   //close(sockfd);
    
 }
 int
