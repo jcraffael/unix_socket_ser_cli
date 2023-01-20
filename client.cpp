@@ -2,7 +2,7 @@
 //include "libshared/libshared.hpp"
 #include "int_socket_cli.hpp"
 
-
+char *destination = "127.0.0.1";
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 
    
    /* Create a socket point */
-   int_socket_cli client = int_socket_cli(AF_INET, SOCK_STREAM, 0, UDP_PORT, DESTINATION);
+   int_socket_cli client = int_socket_cli(AF_INET, SOCK_STREAM, 0, UDP_PORT, destination);
    sockfd = client.get_sock();
    serv_addr = client.get_addr();
    client.connect_to(sockfd, serv_addr);

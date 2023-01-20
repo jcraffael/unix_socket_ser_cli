@@ -2,7 +2,7 @@
 #include <csignal>
 #include "libshared/libshared.hpp"
 #include "int_socket_ser.hpp"
-
+char *destination = "127.0.0.1";
 using namespace std;
 
 void signal_handler(int)
@@ -22,7 +22,7 @@ void init_int_socket()
    struct sockaddr_in serv_addr; 
    int sent_recv_bytes;
    
-   int_socket_ser server = int_socket_ser(AF_INET, SOCK_STREAM, 0, UDP_PORT, DESTINATION);
+   int_socket_ser server = int_socket_ser(AF_INET, SOCK_STREAM, 0, UDP_PORT, destination);
    //server.test_socket();
    
     sockfd = server.get_sock();

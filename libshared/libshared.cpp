@@ -187,37 +187,49 @@ unsigned short set_value(const std::string& key, const std::string &value)
     
     if(!path_val.empty())
     {
-        in_file.open(path_val, fstream::out | fstream::in | fstream::app);
-        //ofstream in_file(path_val, ios::in | ios::out);
+        in_file.open(path_val);
         cout << "File " << path_val << " opened correctly" << endl;
         if(!in_file.is_open()) 
         {
             perror("Resource file open error ..."); 
             return 1;
         }
-        while(getline(in_file, line))
+        string text(
+          (istreambuf_iterator<char>(in_file)),
+          istreambuf_iterator<char>());
+        in_file.close();
+        size_t pos = 0;
+        if ((pos = text.find(key, pos)) != string::npos) 
         {
-            if(line.find(key)!= string::npos)
-            {
-                //line.replace(key.length() + 3, line.length() - key.length() - 3, value);
-                line.replace(0, line.length(), "");
-                cout << "Value replaced " << endl;
+                pos += key.length() + 3;
+                int pos_break;
+                if((pos_break = text.find("\n", pos)) == string::npos) return 255;
+                //cout << "Pos is " << pos << " and pos break is " << pos_break;
+                text.replace(pos , pos_break - pos, value);
+                cout << text << endl;
+                in_file.open(path_val, fstream::in | fstream::out | fstream::trunc);
+                in_file << text; 
+            
                 in_file.close();
                 return 0;
-            }
-                
         }
-        in_file.clear();
-        //in_file.close();
-        //in_file.open(path_val, fstream::out | fstream::ate |fstream::app);
-        
-        in_file.seekp(ios::end);
-        
-        int pos = in_file.tellp();
-        cout << "Pos is " << pos << endl;
-        in_file << key << " : " << value << "\n";
-       
-        
+
+        in_file.open(path_val, fstream::in | fstream::out | fstream::app);
+	
+        in_file << key << " : " << value << endl;
+        // while(getline(in_file, line))
+        // {
+        //     if(line.find(key)!= string::npos)
+        //     {
+        //         //line.replace(key.length() + 3, line.length() - key.length() - 3, value);
+        //         line.replace(0, line.length(), "");
+        //         cout << "Value replaced " << endl;
+        //         in_file.close();
+        //         return 0;
+        //     }
+                
+        // }
+
         in_file.close();
         // int pos_key;
         // string buf_map(buffer);

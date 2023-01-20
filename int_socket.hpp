@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #define UDP_PORT 12345
 #define BUF_SIZE 256
-#define DESTINATION "127.0.0.1"
+
 class int_socket
 {
     private:
