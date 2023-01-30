@@ -3,13 +3,11 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-
 #include <cstring> 
 #include <map>
-#include <sys/ipc.h>
-#include <sys/shm.h>
+//include <sys/ipc.h>
+//include <sys/shm.h>
 #include <memory.h>
-#include <sys/shm.h>
 #include <sys/mman.h>
 #include <fcntl.h>
 #include <sys/stat.h>

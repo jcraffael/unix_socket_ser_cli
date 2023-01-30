@@ -1,6 +1,6 @@
 #include "int_socket_ser.hpp"
 
-void int_socket_ser::binding(int sockfd, struct sockaddr_in addr)
+int int_socket_ser::binding(int sockfd, struct sockaddr_in addr)
 {
     
     if(bind(sockfd, (struct sockaddr *) &addr, sizeof(addr)) < 0)
@@ -8,13 +8,8 @@ void int_socket_ser::binding(int sockfd, struct sockaddr_in addr)
         perror("Error in binging ...");
         exit(3);
     }
+    return 0;
 }
-
-// int_socket_ser::int_socket_ser(int domain, int type, int protocol, int port, char *ip_addr) : int_socket(domain, type, protocol, port, ip_addr)
-// {
-    
-//     set_connection(connect_to(get_sock(), get_addr()));
-// }
 
 int int_socket_ser::listen_to_connection(int sockfd, int num)
 {

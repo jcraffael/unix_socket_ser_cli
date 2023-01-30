@@ -1,9 +1,14 @@
 #include <sys/types.h>
 #include <csignal>
+
 #include "libshared/libshared.hpp"
 #include "int_socket_ser.hpp"
-char *destination = "127.0.0.1";
+#include "utils.hpp"
+
 using namespace std;
+
+const vector<string>actions {"LOAD", "GET", "SET"};
+
 
 void signal_handler(int)
 {
@@ -54,12 +59,14 @@ void init_int_socket()
     printf("Server recvd %d bytes from client: %s\n", sent_recv_bytes, buffer);
 
     string buf_string(buffer);
-    string k_value;
+    string k_value{};
     int delim = buf_string.find(" ");
     action = buf_string.substr(0, delim);
-    content = buf_string.substr(delim + 1, buf_string.length() - delim -2);
+    content = buf_string.substr(delim + 1, buf_string.length() - delim -1);
     uint16_t res;
     cout << "action is " << action << " and content is " << content << endl;
+
+ 
     if(action == "LOAD")
     {
         path = content;
@@ -87,13 +94,13 @@ void init_int_socket()
 
     cout << "sending final result back to client\n";
     sent_recv_bytes = write(newsockfd, buffer, BUF_SIZE);
-    printf("Server sent %d bytes in reply to client\n", sent_recv_bytes);
+    printf("Server sent %d bytes in reply to client: %s\n", sent_recv_bytes, buffer);
 
    }
    
 }
 int
-main(int argc, char *argv[])
+main()
 {
 
     init_int_socket();

@@ -2,7 +2,7 @@
 #define BUF_SIZE 256
 using namespace std;
 
-char mkey[] = "shmfile";
+//char mkey[] = "shmfile";
 string path_val;
 fstream in_file;
 
@@ -98,11 +98,11 @@ fstream in_file;
 
 unsigned short load_resource(string path)
 {
-    //map<std::string, std::string> m;
-    string buffer;
-    string line;
-    //string mk, mv;
-    uint32_t buf_size;
+    
+    // string buffer;
+    // string line;
+    
+    // uint32_t buf_size;
     path_val = path;
     
     in_file.open(path, ios::out);
@@ -136,8 +136,8 @@ unsigned short load_resource(string path)
 unsigned short get_value(const string& key, string& value)
 {
      
-    char buffer[BUF_SIZE];
-    memset(buffer, 0, BUF_SIZE);
+    //char buffer[BUF_SIZE];
+    //memset(buffer, 0, BUF_SIZE);
     //int res = _get_buffer(buffer);
     string line {};
     if(!path_val.empty())
@@ -155,6 +155,7 @@ unsigned short get_value(const string& key, string& value)
             if(line.find(key)!= string::npos)
             {
                 value = line.substr(key.length() + 3, line.length() - key.length() - 3);
+                cout << "key is " << key << " value is " << value << endl;
                 in_file.close();
                 return 0;
             }
@@ -194,9 +195,12 @@ unsigned short set_value(const std::string& key, const std::string &value)
             perror("Resource file open error ..."); 
             return 1;
         }
+
+        /* Output the content of the file to a string */
         string text(
           (istreambuf_iterator<char>(in_file)),
           istreambuf_iterator<char>());
+
         in_file.close();
         size_t pos = 0;
         if ((pos = text.find(key, pos)) != string::npos) 
@@ -206,7 +210,7 @@ unsigned short set_value(const std::string& key, const std::string &value)
                 if((pos_break = text.find("\n", pos)) == string::npos) return 255;
                 //cout << "Pos is " << pos << " and pos break is " << pos_break;
                 text.replace(pos , pos_break - pos, value);
-                cout << text << endl;
+                //cout << text << endl;
                 in_file.open(path_val, fstream::in | fstream::out | fstream::trunc);
                 in_file << text; 
             
