@@ -7,15 +7,16 @@ echo "Now running test1"
 ./server &
 sleep 1
 PID_SERV=$(ps aux | grep /server$ | grep -v "grep" | awk '{print $2}')
-PID_PORT=$(netstat -putan | grep 12345 | awk '{print $NF}' | cut -d "/" -f 1)
-if [ "$PID_SERV" -ne "$PID_PORT" ]; then
+PID_PORT=$(lsof -i -P -n | grep 12345 | awk '{print $NF}' | cut -d "/" -f 1)
+echo "Server-s PID is $PID_SERV"
+if [ "$PID_SERV" != "$PID_PORT" ]; then
         echo "Error in launching server"
         exit 1
 else
         echo "Server launched correctly!"
 fi
 kill -9 $PID_SERV
-if [ ! -z "$(ps aux | grep /server$ | grep -v "grep" | awk '{print $2}')" ] || [ ! -z $(netstat -putan | grep 12345 | awk '{print $NF}') ]; then
+if [ ! -z "$(ps aux | grep /server$ | grep -v "grep" | awk '{print $2}')" ] || [ ! -z $(lsof -i -P -n | grep 12345 | awk '{print $NF}') ]; then
         echo "Error in killing server"
         exit 1
 else

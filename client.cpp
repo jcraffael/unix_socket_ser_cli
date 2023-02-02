@@ -1,18 +1,12 @@
 
 #include "int_socket_cli.hpp"
 #include "utils.hpp"
-#define debug 
+#define debug 1
 
 using namespace std;
 
 const vector<string>actions {"--load", "--get", "--set"};
 
-char *tuppercase(char *str)
-{
-   for(int i = 0; i < strlen(str); i++)
-      str[i] -= 32;
-   return str;
-}
 
 int main(int argc, char *argv[])
 {

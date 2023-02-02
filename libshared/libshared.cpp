@@ -206,7 +206,7 @@ unsigned short set_value(const std::string& key, const std::string &value)
         if ((pos = text.find(key, pos)) != string::npos) 
         {
                 pos += key.length() + 3;
-                int pos_break;
+                size_t pos_break;
                 if((pos_break = text.find("\n", pos)) == string::npos) return 255;
                 //cout << "Pos is " << pos << " and pos break is " << pos_break;
                 text.replace(pos , pos_break - pos, value);

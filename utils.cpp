@@ -1,6 +1,6 @@
 #include "utils.hpp"
 
-char log_file_path[] = "execution.log"; 
+
 
 void traceEvent(int eventTraceLevel,
 		       const char* file, const int line, const char * format, ...) {
@@ -77,4 +77,11 @@ void traceEvent(int eventTraceLevel,
 
     va_end(va_ap);
   //}
+}
+
+char *tuppercase(char *str)
+{
+   for(size_t i = 0; i < strlen(str); i++)
+      str[i] -= 32;
+   return str;
 }

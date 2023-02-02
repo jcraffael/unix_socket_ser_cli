@@ -1,0 +1,93 @@
+02/Feb/2023 15:08:43 [server.cpp:34] NORMAL: Server socket created successfully with fd 3.
+02/Feb/2023 15:08:43 [server.cpp:42] NORMAL: Server socket bond successfully and is listening ...
+02/Feb/2023 15:08:43 [server.cpp:50] NORMAL: Server socket waiting for new connection ...
+02/Feb/2023 15:08:49 [server.cpp:34] NORMAL: Server socket created successfully with fd 3.
+02/Feb/2023 15:08:49 [server.cpp:42] NORMAL: Server socket bond successfully and is listening ...
+02/Feb/2023 15:08:49 [server.cpp:50] NORMAL: Server socket waiting for new connection ...
+02/Feb/2023 15:08:49 [client.cpp:30] NORMAL: Client socket created successfully with fd 3!
+02/Feb/2023 15:08:49 [server.cpp:56] NORMAL: Connection accepted, waiting for data from the client through new sock 4.
+02/Feb/2023 15:08:49 [client.cpp:37] NORMAL: Client connected to server successfully!
+02/Feb/2023 15:08:49 [client.cpp:63] NORMAL: Action is LOAD and key is /tmp/example.ini
+02/Feb/2023 15:08:49 [server.cpp:69] NORMAL: Server recvd 256 bytes from client: LOAD /tmp/example.ini
+02/Feb/2023 15:08:49 [server.cpp:80] DEBUG: Action is: ðŸÿ¤þ, content is: páP|U
+02/Feb/2023 15:08:49 [server.cpp:90] NORMAL: Loading file in °áP|U
+02/Feb/2023 15:08:49 [server.cpp:130] NORMAL: Server sent 256 bytes in reply to client: 0 
+02/Feb/2023 15:08:49 [server.cpp:50] NORMAL: Server socket waiting for new connection ...
+02/Feb/2023 15:08:49 [client.cpp:109] NORMAL: Sent 256 bytes to the server ...
+02/Feb/2023 15:08:49 [client.cpp:121] NORMAL: Reply from server: 0 
+Received 256 bytes from the server ...
+02/Feb/2023 15:08:49 [client.cpp:30] NORMAL: Client socket created successfully with fd 3!
+02/Feb/2023 15:08:49 [server.cpp:56] NORMAL: Connection accepted, waiting for data from the client through new sock 5.
+02/Feb/2023 15:08:49 [client.cpp:37] NORMAL: Client connected to server successfully!
+02/Feb/2023 15:08:49 [client.cpp:63] NORMAL: Action is GET and key is foo.bar
+02/Feb/2023 15:08:49 [server.cpp:69] NORMAL: Server recvd 256 bytes from client: GET foo.bar
+02/Feb/2023 15:08:49 [server.cpp:80] DEBUG: Action is: ðŸÿ¤þ, content is:  ÿ¤þ
+02/Feb/2023 15:08:49 [server.cpp:99] NORMAL: Geting value from key  ÿ¤þ
+02/Feb/2023 15:08:49 [server.cpp:130] NORMAL: Server sent 256 bytes in reply to client: 0 YES
+02/Feb/2023 15:08:49 [server.cpp:50] NORMAL: Server socket waiting for new connection ...
+02/Feb/2023 15:08:49 [client.cpp:109] NORMAL: Sent 256 bytes to the server ...
+02/Feb/2023 15:08:49 [client.cpp:121] NORMAL: Reply from server: 0 YES
+Received 256 bytes from the server ...
+02/Feb/2023 15:08:49 [client.cpp:30] NORMAL: Client socket created successfully with fd 3!
+02/Feb/2023 15:08:49 [server.cpp:56] NORMAL: Connection accepted, waiting for data from the client through new sock 6.
+02/Feb/2023 15:08:49 [client.cpp:37] NORMAL: Client connected to server successfully!
+02/Feb/2023 15:08:49 [client.cpp:63] NORMAL: Action is GET and key is foo.tar
+02/Feb/2023 15:08:49 [server.cpp:69] NORMAL: Server recvd 256 bytes from client: GET foo.tar
+02/Feb/2023 15:08:49 [server.cpp:80] DEBUG: Action is: ðŸÿ¤þ, content is:  ÿ¤þ
+02/Feb/2023 15:08:49 [server.cpp:99] NORMAL: Geting value from key  ÿ¤þ
+02/Feb/2023 15:08:49 [server.cpp:130] NORMAL: Server sent 256 bytes in reply to client: 3 
+02/Feb/2023 15:08:49 [server.cpp:50] NORMAL: Server socket waiting for new connection ...
+02/Feb/2023 15:08:49 [client.cpp:109] NORMAL: Sent 256 bytes to the server ...
+02/Feb/2023 15:08:49 [client.cpp:121] NORMAL: Reply from server: 3 
+Received 256 bytes from the server ...
+02/Feb/2023 15:08:49 [client.cpp:30] NORMAL: Client socket created successfully with fd 3!
+02/Feb/2023 15:08:49 [server.cpp:56] NORMAL: Connection accepted, waiting for data from the client through new sock 7.
+02/Feb/2023 15:08:49 [client.cpp:37] NORMAL: Client connected to server successfully!
+02/Feb/2023 15:08:49 [client.cpp:63] NORMAL: Action is SET and key is color.red
+02/Feb/2023 15:08:49 [server.cpp:69] NORMAL: Server recvd 256 bytes from client: SET color.red roses are red
+02/Feb/2023 15:08:49 [server.cpp:80] DEBUG: Action is: ðŸÿ¤þ, content is: PáP|U
+02/Feb/2023 15:08:49 [server.cpp:110] NORMAL: Setting value ðŸÿ¤þ for key  ÿ¤þ
+02/Feb/2023 15:08:49 [server.cpp:130] NORMAL: Server sent 256 bytes in reply to client: 0 
+02/Feb/2023 15:08:49 [server.cpp:50] NORMAL: Server socket waiting for new connection ...
+02/Feb/2023 15:08:49 [client.cpp:109] NORMAL: Sent 256 bytes to the server ...
+02/Feb/2023 15:08:49 [client.cpp:121] NORMAL: Reply from server: 0 
+Received 256 bytes from the server ...
+02/Feb/2023 15:12:49 [server.cpp:34] NORMAL: Server socket created successfully with fd 3.
+02/Feb/2023 15:12:49 [server.cpp:42] NORMAL: Server socket bond successfully and is listening ...
+02/Feb/2023 15:12:49 [server.cpp:50] NORMAL: Server socket waiting for new connection ...
+02/Feb/2023 15:14:12 [client.cpp:30] NORMAL: Client socket created successfully with fd 3!
+02/Feb/2023 15:14:12 [server.cpp:56] NORMAL: Connection accepted, waiting for data from the client through new sock 4.
+02/Feb/2023 15:14:12 [client.cpp:37] NORMAL: Client connected to server successfully!
+02/Feb/2023 15:14:12 [client.cpp:63] NORMAL: Action is LOAD and key is /tmp/example.ini
+02/Feb/2023 15:14:12 [server.cpp:69] NORMAL: Server recvd 256 bytes from client: LOAD /tmp/example.ini
+02/Feb/2023 15:14:12 [server.cpp:80] DEBUG: Action is: 0¯.#þ, content is: paF¼*V
+02/Feb/2023 15:14:12 [server.cpp:90] NORMAL: Loading file in °aF¼*V
+02/Feb/2023 15:14:12 [server.cpp:130] NORMAL: Server sent 256 bytes in reply to client: 0 
+02/Feb/2023 15:14:12 [server.cpp:50] NORMAL: Server socket waiting for new connection ...
+02/Feb/2023 15:14:12 [client.cpp:109] NORMAL: Sent 256 bytes to the server ...
+02/Feb/2023 15:14:12 [client.cpp:121] NORMAL: Reply from server: 0 
+Received 256 bytes from the server ...
+02/Feb/2023 15:14:39 [client.cpp:30] NORMAL: Client socket created successfully with fd 3!
+02/Feb/2023 15:14:39 [server.cpp:56] NORMAL: Connection accepted, waiting for data from the client through new sock 5.
+02/Feb/2023 15:14:39 [client.cpp:37] NORMAL: Client connected to server successfully!
+02/Feb/2023 15:14:39 [client.cpp:63] NORMAL: Action is SET and key is section.color.red
+02/Feb/2023 15:14:39 [server.cpp:69] NORMAL: Server recvd 256 bytes from client: SET section.color.red roses are red
+02/Feb/2023 15:14:39 [server.cpp:80] DEBUG: Action is: 0¯.#þ, content is: pfF¼*V
+02/Feb/2023 15:14:39 [server.cpp:110] NORMAL: Setting value 0¯.#þ for key 0aF¼*V
+02/Feb/2023 15:14:39 [server.cpp:130] NORMAL: Server sent 256 bytes in reply to client: 0 
+02/Feb/2023 15:14:39 [server.cpp:50] NORMAL: Server socket waiting for new connection ...
+02/Feb/2023 15:14:39 [client.cpp:109] NORMAL: Sent 256 bytes to the server ...
+02/Feb/2023 15:14:39 [client.cpp:121] NORMAL: Reply from server: 0 
+Received 256 bytes from the server ...
+02/Feb/2023 15:15:00 [client.cpp:30] NORMAL: Client socket created successfully with fd 3!
+02/Feb/2023 15:15:00 [server.cpp:56] NORMAL: Connection accepted, waiting for data from the client through new sock 6.
+02/Feb/2023 15:15:00 [client.cpp:37] NORMAL: Client connected to server successfully!
+02/Feb/2023 15:15:00 [client.cpp:63] NORMAL: Action is GET and key is section.foo.bar
+02/Feb/2023 15:15:00 [server.cpp:69] NORMAL: Server recvd 256 bytes from client: GET section.foo.bar
+02/Feb/2023 15:15:00 [server.cpp:80] DEBUG: Action is: 0¯.#þ, content is: P¯.#þ
+02/Feb/2023 15:15:00 [server.cpp:99] NORMAL: Geting value from key P¯.#þ
+02/Feb/2023 15:15:00 [server.cpp:130] NORMAL: Server sent 256 bytes in reply to client: 3 
+02/Feb/2023 15:15:00 [server.cpp:50] NORMAL: Server socket waiting for new connection ...
+02/Feb/2023 15:15:00 [client.cpp:109] NORMAL: Sent 256 bytes to the server ...
+02/Feb/2023 15:15:00 [client.cpp:121] NORMAL: Reply from server: 3 
+Received 256 bytes from the server ...

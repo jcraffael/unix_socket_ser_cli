@@ -8,17 +8,23 @@
 #include <cstring>
 
 #define INFO __FILE__, __LINE__
+
+inline char log_file_path[] = ""; 
 enum{
 
 TRACE_LEVEL_ERROR = 0,
 TRACE_LEVEL_WARNING,
-TRACE_LEVEL_NORMAL,
 TRACE_LEVEL_DEBUG,
+TRACE_LEVEL_NORMAL,
 TRACE_LEVEL_DISABLE
 };
 
 
 void traceEvent(int eventTraceLevel,
 		       const char* file, const int line, const char * format, ...);
+
+char *tuppercase(char *str);
+
+
 
 #endif
