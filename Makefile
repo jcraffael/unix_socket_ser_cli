@@ -1,22 +1,22 @@
 CC = g++
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra -g
 TARGET = server client libshared/libshared.so 
 LIBS = -L ./libshared -lshared -lrt
-OBJ = server.o client.o utils.o int_socket.o int_socket_ser.o int_socket_cli.o 
+OBJ = server.o client.o utils.o mes_process.o int_socket.o int_socket_ser.o int_socket_cli.o 
 BINS = server client
 #DEPSRC = libshared/libshared.cpp
 # default:
 # 	 $(CC) $(CFLAGS) -g server.cpp $(DEPSRC) -o server -lrt
 # 	 $(CC) $(CFLAGS) -g client.cpp $(DEPSRC) -o client -lrt
 
-client: client.o int_socket_cli.o int_socket.o utils.o
-	$(CC) $(CFLAGS) client.o int_socket_cli.o int_socket.o utils.o -o client
+client: client.o int_socket_cli.o int_socket.o utils.o mes_process.o
+	$(CC) $(CFLAGS) client.o int_socket_cli.o int_socket.o utils.o mes_process.o -o client
 
-client.o: client.cpp int_socket_cli.hpp int_socket.hpp utils.hpp
+client.o: client.cpp int_socket_cli.hpp int_socket.hpp utils.hpp mes_process.hpp
 	$(CC) $(CFLAGS) -c client.cpp -o client.o
 
-server: server.o int_socket_ser.o int_socket.o utils.o libshared/libshared.so
-	$(CC) $(CFLAGS) server.o int_socket_ser.o int_socket.o utils.o -o server ${LIBS}
+server: server.o int_socket_ser.o int_socket.o utils.o mes_process.o libshared/libshared.so
+	$(CC) $(CFLAGS) server.o int_socket_ser.o int_socket.o utils.o mes_process.o -o server ${LIBS}
 
 server.o: server.cpp int_socket_ser.hpp int_socket.hpp utils.hpp
 	$(CC) $(CFLAGS) -c -I libshared server.cpp -o server.o
@@ -32,6 +32,9 @@ int_socket.o: int_socket.cpp
 
 utils.o: utils.cpp
 	$(CC) $(CFLAGS) -c utils.cpp -o utils.o
+
+mes_process.o: mes_process.cpp
+	$(CC) $(CFLAGS) -c mes_process.cpp -o mes_process.o
 
 libshared/libshared.so:
 	(cd libshared; make)

@@ -4,6 +4,8 @@
 #include "libshared/libshared.hpp"
 #include "int_socket_ser.hpp"
 #include "utils.hpp"
+#include "mes_process.hpp"
+//define BUF_SIZE 256
 #define debug 1
 using namespace std;
 
@@ -31,7 +33,7 @@ void init_int_socket()
    int_socket_ser server = int_socket_ser(AF_INET, SOCK_STREAM, 0, UDP_PORT, destination);
    sockfd = server.get_sock();
    #ifdef debug
-        traceEvent(TRACE_LEVEL_NORMAL, INFO, "Server socket created successfully with fd %d.", sockfd);
+        traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server socket created successfully with fd %d.", sockfd);
     #endif
    
     
@@ -39,7 +41,7 @@ void init_int_socket()
     server.binding(sockfd, serv_addr);
     server.listen_to_connection(sockfd, 5);
    #ifdef debug
-        traceEvent(TRACE_LEVEL_NORMAL, INFO, "Server socket bond successfully and is listening ...");
+        traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server socket bond successfully and is listening ...");
     #endif
    
    while(1)
@@ -47,13 +49,13 @@ void init_int_socket()
     
     signal(SIGINT, signal_handler);//(sighandler_t *)signal_handler);
     #ifdef debug
-        traceEvent(TRACE_LEVEL_NORMAL, INFO, "Server socket waiting for new connection ...");
+        traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server socket waiting for new connection ...");
     #endif
 
     server.connect_to(sockfd, serv_addr);
     newsockfd = server.get_newfd();
     #ifdef debug
-        traceEvent(TRACE_LEVEL_NORMAL, INFO, "Connection accepted, waiting for data from the client through new sock %d.", newsockfd);
+        traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Connection accepted, waiting for data from the client through new sock %d.", newsockfd);
     #endif
     
     /* If connection is established then start communicating */
@@ -66,28 +68,34 @@ void init_int_socket()
     }
     
     #ifdef debug
-        traceEvent(TRACE_LEVEL_NORMAL, INFO, "Server recvd %d bytes from client: %s", sent_recv_bytes, buffer);
+        traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server recvd %d bytes from client: %s", sent_recv_bytes, buffer);
     #endif
 
-    string buf_string(buffer);
-    string k_value{};
-    int delim = buf_string.find(" ");
-    action = buf_string.substr(0, delim);
-    content = buf_string.substr(delim + 1, buf_string.length() - delim -1);
-    uint16_t res;
+    // string buf_string(buffer);
+    // string k_value{};
+    // int delim = buf_string.find(" ");
+    // action = buf_string.substr(0, delim);
+    // content = buf_string.substr(delim + 1, buf_string.length() - delim -1);
+    // uint16_t res;
     
+    
+    // string key = content.substr(0, content.find(" "));
+    // string value = content.erase(0, content.find(" ") + 1);
+    mes_buf *mbuf = parse_buffer(buffer);
+    string action{mbuf->act};
+    string key{mbuf->cont};
+    string value{mbuf->val};
+    short res{};
+    string k_value{};
     #ifdef debug
-        traceEvent(TRACE_LEVEL_DEBUG, INFO, "Action is: %s, content is: %s", action.c_str(), content.c_str());
+        traceEvent(TRACE_LEVEL, TRACE_LEVEL_DEBUG, INFO, "Action is: %s, content is: %s", mbuf->act, mbuf->cont);
     #endif
-    string key = content.substr(0, content.find(" "));
-    string value = content.erase(0, content.find(" ") + 1);
- 
-    if(action == "LOAD")
+    if(action =="LOAD")
     {
         //string path = content;
         res = load_resource(key);
         #ifdef debug
-            traceEvent(TRACE_LEVEL_NORMAL, INFO, "Loading file in %s", key.c_str());
+            traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Loading file in %s", key.c_str());
         #endif
     }
     else if(action == "GET")
@@ -96,7 +104,7 @@ void init_int_socket()
         //string value;
         res = get_value(key, k_value);
         #ifdef debug
-            traceEvent(TRACE_LEVEL_NORMAL, INFO, "Geting value from key %s", key.c_str());
+            traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Geting value from key %s", key.c_str());
         #endif
 
     }
@@ -107,27 +115,33 @@ void init_int_socket()
         //cout << "key is " << key << " and value is " << value << endl;
         res = set_value(key, value);
         #ifdef debug
-            traceEvent(TRACE_LEVEL_NORMAL, INFO, "Setting value %s for key %s", value.c_str(), key.c_str());
+            traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Setting value %s for key %s", value.c_str(), key.c_str());
         #endif
     }
     else
     {
         res = 127;
         #ifdef debug
-            traceEvent(TRACE_LEVEL_ERROR, INFO, "Incorrect action.");
+            traceEvent(TRACE_LEVEL, TRACE_LEVEL_ERROR, INFO, "Incorrect action.");
         #endif
     }
         
 
-    memset(buffer, 0, BUF_SIZE);
-    sprintf(buffer, "%u %s\n", res, k_value.length() ? k_value.c_str() : "");
-
+    //memset(buffer, 0, BUF_SIZE);
+    //sprintf(buffer, "%u %s\n", res, k_value.length() ? k_value.c_str() : "");
+    rep_buf *rbuf;
+    if(k_value.empty())
+        rbuf = init_rep_buf(res);
+    else
+        rbuf = init_rep_buf(res, k_value.c_str());
+    
+    create_server_buffer(rbuf, buffer);    
     
     
     sent_recv_bytes = write(newsockfd, buffer, BUF_SIZE);
     //printf("Server sent %d bytes in reply to client: %s\n", sent_recv_bytes, buffer);
     #ifdef debug
-        traceEvent(TRACE_LEVEL_NORMAL, INFO, "Server sent %d bytes in reply to client: %s", sent_recv_bytes, buffer);
+        traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server sent %d bytes in reply to client: %s", sent_recv_bytes, buffer);
     #endif
 
    }

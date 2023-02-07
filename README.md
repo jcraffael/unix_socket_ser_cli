@@ -16,7 +16,7 @@ allows an application to retrieve the value of a key available in a previously l
 
   ```std::string buffer; unsigned short res =get_value(“section.foo.bar”, buffer);```
 
-return values: 0 in case of success, 3 in case of missing key, 4 in case a resource file has not been loaded yet, 255 in case of generic error○
+return values: 0 in case of success, 3 in case of missing key, 4 in case a resource file has not been loaded yet, 255 in case of generic error
 
   ```unsigned short set_value(const std::string& key, conststd::string &value);```
 
@@ -51,13 +51,14 @@ return values: the same returned by the library followed by a \n character, or 1
 
 4.A simple bash script to be used to test the system:
 
-test 
-1:i.launch the server
+test 1:
+i.launch the server
 ii.verify the server is up and running by checking its PID and the serverslistening to port 12345
 iii.stop the server with a SIGINT unix signal
-iv.verify the server is no more running by checking its PID and that thereare no more servers listening to port 12345○test 
+iv.verify the server is no more running by checking its PID and that thereare no more servers listening to port 12345
 
-2:i.write a test INI file to /tmp
+test 2:
+i.write a test INI file to /tmp
 ii.launch the server
 iii.launch the client and load the test INI file
 iv.verify the load succeededv.launch the client and get one of the values inside the test INI file

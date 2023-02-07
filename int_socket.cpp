@@ -36,12 +36,12 @@ void int_socket::set_connection(int con)
     connection = con;
 }
 
-int int_socket::test_connection()
-{
-    if(connection < 0)
-    {
-        perror("Error in connection ...");
-        exit(2);
-    }
-    return 0;
-}
+// int int_socket::test_connection()
+// {
+//     if(connection < 0)
+//     {
+//         perror("Error in connection ...");
+//         exit(2);
+//     }
+//     return 0;
+// }

@@ -1,8 +1,7 @@
 #include "utils.hpp"
 
 
-
-void traceEvent(int eventTraceLevel,
+void traceEvent(int traceLevel, int eventTraceLevel,
 		       const char* file, const int line, const char * format, ...) {
   va_list va_ap;
   struct tm result;
@@ -28,7 +27,7 @@ void traceEvent(int eventTraceLevel,
         break;
   }
      
-  //if(eventTraceLevel <= traceLevel) {
+  if(eventTraceLevel <= traceLevel) {
     char buf[8192], out_buf[8229];
     char theDate[32];
     
@@ -76,7 +75,7 @@ void traceEvent(int eventTraceLevel,
     //   syslog(LOG_WARNING, "%s", syslogMsg);
 
     va_end(va_ap);
-  //}
+  }
 }
 
 char *tuppercase(char *str)

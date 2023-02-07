@@ -1,18 +1,19 @@
 
 #include "int_socket_cli.hpp"
 #include "utils.hpp"
+#include "mes_process.hpp"
 #define debug 1
 
 using namespace std;
 
-const vector<string>actions {"--load", "--get", "--set"};
+//const vector<string>actions {"--load", "--get", "--set"};
 
 
 int main(int argc, char *argv[])
 {
    if(argc < 3)
    {
-      traceEvent(TRACE_LEVEL_ERROR, INFO, "Arguments missing!");
+      traceEvent(TRACE_LEVEL, TRACE_LEVEL_ERROR, INFO, "Arguments missing!");
       exit(EXIT_FAILURE);
    }
       
@@ -27,47 +28,55 @@ int main(int argc, char *argv[])
    int_socket_cli client = int_socket_cli(AF_INET, SOCK_STREAM, 0, UDP_PORT, destination);
    sockfd = client.get_sock();
    #ifdef debug
-      traceEvent(TRACE_LEVEL_NORMAL, INFO, "Client socket created successfully with fd %d!", sockfd);
+      traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Client socket created successfully with fd %d!", sockfd);
    #endif
    
    serv_addr = client.get_addr();
    client.connect_to(sockfd, serv_addr);
 
    #ifdef debug
-      traceEvent(TRACE_LEVEL_NORMAL, INFO, "Client connected to server successfully!");
+      traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Client connected to server successfully!");
    #endif
 
-   memset(buffer, 0, BUF_SIZE);
-   string action(argv[1]);
-   
-
-   if(count(actions.begin(), actions.end(), action)) 
-   {
-      //cout << argv[1] + 2 << endl;
-      sprintf(buffer, "%s %s", tuppercase(argv[1] + 2), argv[2]);
-      if(action == "--set")
-      {
-         if(argc < 4)
-         {
-            cout << "Incorrect arguments!" << endl;
-            exit(EXIT_FAILURE);
-         }
-         else
-         {
-            strcat(buffer, " ");
-            strcat(buffer, argv[3]);
-         }
-      }
-
-      #ifdef debug
-         traceEvent(TRACE_LEVEL_NORMAL, INFO, "Action is %s and key is %s", argv[1] + 2, argv[2]);
-      #endif
-   }
+   //memset(buffer, 0, BUF_SIZE);
+   mes_buf *mbuf;
+   if(argc >= 4)
+      mbuf = init_mes_buf(tuppercase(argv[1] + 2), argv[2], argv[3]);
    else
-   {
-      traceEvent(TRACE_LEVEL_ERROR, INFO, "Incorrect action!");
-      exit(EXIT_FAILURE);
-   }
+      mbuf = init_mes_buf(tuppercase(argv[1] + 2), argv[2]);
+
+   //string action(argv[1]);
+   #ifdef debug
+      traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Action is %s and key is %s", argv[1] + 2, argv[2]);
+   #endif
+
+   // if(count(actions.begin(), actions.end(), action)) 
+   // {
+   //    //cout << argv[1] + 2 << endl;
+   //    sprintf(buffer, "%s %s", tuppercase(argv[1] + 2), argv[2]);
+   //    if(action == "--set")
+   //    {
+   //       if(argc < 4)
+   //       {
+   //          cout << "Incorrect arguments!" << endl;
+   //          exit(EXIT_FAILURE);
+   //       }
+   //       else
+   //       {
+   //          strcat(buffer, " ");
+   //          strcat(buffer, argv[3]);
+   //       }
+   //    }
+
+   //    #ifdef debug
+   //       traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Action is %s and key is %s", argv[1] + 2, argv[2]);
+   //    #endif
+   // }
+   // else
+   // {
+   //    traceEvent(TRACE_LEVEL, TRACE_LEVEL_ERROR, INFO, "Incorrect action!");
+   //    exit(EXIT_FAILURE);
+   // }
 
    // if(action == "--load")
    // {
@@ -95,10 +104,11 @@ int main(int argc, char *argv[])
    //    exit(EXIT_FAILURE);
    // }
 
+   create_client_buffer(mbuf, buffer);
 
    /* Send message to the server */
    
-   //cout << "Sending request to the server ..." << endl;
+   cout << "Buffer:" << buffer << endl;
    sent_recv_bytes = write(sockfd, buffer, BUF_SIZE);
    
    if (sent_recv_bytes < 0) {
@@ -106,7 +116,7 @@ int main(int argc, char *argv[])
       exit(EXIT_FAILURE);
    }
    #ifdef debug
-      traceEvent(TRACE_LEVEL_NORMAL, INFO, "Sent %d bytes to the server ...", sent_recv_bytes);
+      traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Sent %d bytes to the server ...", sent_recv_bytes);
    #endif
 
    /* Now read server response */
@@ -117,10 +127,14 @@ int main(int argc, char *argv[])
       perror("ERROR reading from socket");
       exit(EXIT_FAILURE);
    }
+
+   rep_buf *rbuf = (rep_buf *)buffer;
+
 	#ifdef debug
-      traceEvent(TRACE_LEVEL_NORMAL, INFO, "Reply from server: %sReceived %d bytes from the server ...", buffer, sent_recv_bytes);
+      traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Reply from server: %d %s", rbuf->res, rbuf->k_val);
    #endif
 
+   delete mbuf;
    //cout << buffer << endl;
    return 0;
 }

@@ -1,5 +1,5 @@
 #include "libshared.hpp"
-#define BUF_SIZE 256
+//define BUF_SIZE 256
 using namespace std;
 
 //char mkey[] = "shmfile";
@@ -111,23 +111,13 @@ unsigned short load_resource(string path)
         perror("Resource file open error ..."); 
         return 1;
     }
-    cout << "File " << path << " opened correctly" << endl;
+    //cout << "File " << path << " opened correctly" << endl;
     // while(getline(in_file, line))
     // {
     //     buffer.append(line + '\n');
     // }
     in_file.close();
 
-    //buf_size = buffer.length();
-    //char* buf_in_char = buffer.c_str();
-    //char *buf_in_char = (char *)malloc(buf_size + 1);
-    //memcpy(buf_in_char, buffer.c_str(), buf_size + 1);
-
-    
-    // int ret = _create_and_write_shared_memory (mkey, buffer.c_str(), buf_size + 1);
-    // if(ret == -1)
-    //     return 255;
-    //cout << "Shared mem created with buffer: " << buffer << endl;
     return 0;
     
 
@@ -142,8 +132,6 @@ unsigned short get_value(const string& key, string& value)
     string line {};
     if(!path_val.empty())
     {
-        //int pos_key;
-        //string buf_map(buffer);
         in_file.open(path_val, fstream::in);
         if(!in_file.is_open()) 
         {
@@ -181,15 +169,15 @@ unsigned short get_value(const string& key, string& value)
 
 unsigned short set_value(const std::string& key, const std::string &value)
 {
-    char buffer[BUF_SIZE];
-    memset(buffer, 0, BUF_SIZE);
+    // char buffer[BUF_SIZE];
+    // memset(buffer, 0, BUF_SIZE);
     //int res = _get_buffer(buffer);
     string line {};
     
     if(!path_val.empty())
     {
         in_file.open(path_val);
-        cout << "File " << path_val << " opened correctly" << endl;
+        //cout << "File " << path_val << " opened correctly" << endl;
         if(!in_file.is_open()) 
         {
             perror("Resource file open error ..."); 
@@ -207,7 +195,12 @@ unsigned short set_value(const std::string& key, const std::string &value)
         {
                 pos += key.length() + 3;
                 size_t pos_break;
-                if((pos_break = text.find("\n", pos)) == string::npos) return 255;
+                if((pos_break = text.find("\n", pos)) == string::npos) 
+                {
+                    cout << "Error reading file." << endl;
+                    in_file.close();
+                    return 255;
+                }
                 //cout << "Pos is " << pos << " and pos break is " << pos_break;
                 text.replace(pos , pos_break - pos, value);
                 //cout << text << endl;
@@ -256,15 +249,10 @@ unsigned short set_value(const std::string& key, const std::string &value)
         // if(ret == -1)
         //     return 255;
         
-
-        // ofstream out_file;
-        // out_file.open(path_val);
-        // if(!out_file) return 255;
-        // out_file << buf_in_char;
-        // delete(buf_in_char);
         return 0;
        
     }
+    
     perror("No file available ...");
     return 255;
 }

@@ -8,11 +8,10 @@
 #include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector>
-#include <algorithm>
+
 
 #define UDP_PORT 12345
-#define BUF_SIZE 256
+//define BUF_SIZE 256
 inline char destination[] = "127.0.0.1";
 
 class int_socket
@@ -30,8 +29,8 @@ class int_socket
     int get_connection();
     struct sockaddr_in get_addr();
     void set_connection(int con);
-    int test_connection();
-    int test_socket();
+    //int test_connection();
+    //int test_socket();
 
 };
 
