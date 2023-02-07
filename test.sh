@@ -7,8 +7,8 @@ echo "Now running test1"
 ./server &
 sleep 1
 PID_SERV=$(ps aux | grep /server$ | grep -v "grep" | awk '{print $2}')
-PID_PORT=$(lsof -i -P -n | grep 12345 | awk '{print $NF}' | cut -d "/" -f 1)
-echo "Server-s PID is $PID_SERV"
+PID_PORT=$(lsof -i -P -n | grep 12345 | awk '{print $2}' | cut -d "/" -f 1)
+echo "Server's PID is $PID_SERV"
 if [ "$PID_SERV" != "$PID_PORT" ]; then
         echo "Error in launching server"
         exit 1

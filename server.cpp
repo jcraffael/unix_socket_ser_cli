@@ -137,12 +137,14 @@ void init_int_socket()
     
     create_server_buffer(rbuf, buffer);    
     
-    
     sent_recv_bytes = write(newsockfd, buffer, BUF_SIZE);
     //printf("Server sent %d bytes in reply to client: %s\n", sent_recv_bytes, buffer);
     #ifdef debug
         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server sent %d bytes in reply to client: %s", sent_recv_bytes, buffer);
     #endif
+
+    delete mbuf;
+    delete rbuf;
 
    }
    

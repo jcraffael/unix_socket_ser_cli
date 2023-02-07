@@ -50,65 +50,11 @@ int main(int argc, char *argv[])
       traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Action is %s and key is %s", argv[1] + 2, argv[2]);
    #endif
 
-   // if(count(actions.begin(), actions.end(), action)) 
-   // {
-   //    //cout << argv[1] + 2 << endl;
-   //    sprintf(buffer, "%s %s", tuppercase(argv[1] + 2), argv[2]);
-   //    if(action == "--set")
-   //    {
-   //       if(argc < 4)
-   //       {
-   //          cout << "Incorrect arguments!" << endl;
-   //          exit(EXIT_FAILURE);
-   //       }
-   //       else
-   //       {
-   //          strcat(buffer, " ");
-   //          strcat(buffer, argv[3]);
-   //       }
-   //    }
-
-   //    #ifdef debug
-   //       traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Action is %s and key is %s", argv[1] + 2, argv[2]);
-   //    #endif
-   // }
-   // else
-   // {
-   //    traceEvent(TRACE_LEVEL, TRACE_LEVEL_ERROR, INFO, "Incorrect action!");
-   //    exit(EXIT_FAILURE);
-   // }
-
-   // if(action == "--load")
-   // {
-   //    sprintf(buffer, "LOAD %s\n", argv[2]);
-   // }
-   // else if(action == "--get")
-   // {
-   //    sprintf(buffer, "GET %s\n", argv[2]);
-   // }
-   // else if(action == "--set")
-   // {
-   //    if(argc < 4)
-   //    {
-   //       cout << "Incorrect arguments!" << endl;
-   //       exit(EXIT_FAILURE);
-   //    }
-
-   //    sprintf(buffer, "SET %s %s\n", argv[2], argv[3]);
-   //    cout << "key is " << argv[2] << " and value is " << argv[3] << endl;
-   //    cout << "buffer is " << buffer << endl;
-   // }
-   // else
-   // {
-   //    cout << "Incorrect action!" << endl;
-   //    exit(EXIT_FAILURE);
-   // }
-
    create_client_buffer(mbuf, buffer);
 
    /* Send message to the server */
    
-   cout << "Buffer:" << buffer << endl;
+   //cout << "Buffer:" << buffer << endl;
    sent_recv_bytes = write(sockfd, buffer, BUF_SIZE);
    
    if (sent_recv_bytes < 0) {
