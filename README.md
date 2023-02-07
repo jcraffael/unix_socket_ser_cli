@@ -68,3 +68,6 @@ ix.launch the client and set a new key value pair
 x.verify the set operation succeededxi.stop the server with a SIGINT unix signal 
 
 Simplified INI file reference:[section]foo.bar = some value
+
+Note for configuration:
+Inside util.hpp it's possible to configure the log file and logging level
