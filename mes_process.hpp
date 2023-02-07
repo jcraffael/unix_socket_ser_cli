@@ -27,16 +27,6 @@ typedef struct rep_buf
     
 }rep_buf;
 
-
-// typedef struct message
-// {
-//     //char buffer[BUF_SIZE];
-//     void create_client_buffer(mes_buf *buf, char *buff);
-//     void create_server_bufferr(rep_buf *buf, char *buff);
-//     mes_buf *parse_buffer(char *buff);
-
-// }message;
-
 mes_buf *init_mes_buf(char *act, char *cont, char *val = NULL);
 rep_buf *init_rep_buf(short res, const char *k_val = NULL);
 void create_client_buffer(mes_buf *buf, char *buff);

@@ -6,9 +6,6 @@
 
 using namespace std;
 
-//const vector<string>actions {"--load", "--get", "--set"};
-
-
 int main(int argc, char *argv[])
 {
    if(argc < 3)
