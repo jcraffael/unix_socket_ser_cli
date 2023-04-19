@@ -1,17 +1,17 @@
 #include "int_socket.hpp"
 
-int_socket::int_socket(int domain, int type, int protocol, int port, char* ip_addr)
+int_socket::int_socket(/*int domain, int type, int protocol, int port, char* ip_addr*/)
 {
-    sockfd = socket(domain, type, protocol);
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if(sockfd < 0)
     {
         perror("Error opening socket ...");
         exit(1);
     }
     
-    addr.sin_family = domain;
-    addr.sin_addr.s_addr = inet_addr(ip_addr);
-    addr.sin_port = htons(port);
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = inet_addr(destination);
+    addr.sin_port = htons(UDP_PORT);
 }
 int_socket::~int_socket()
 {

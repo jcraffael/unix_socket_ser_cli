@@ -30,7 +30,7 @@ void init_int_socket()
    struct sockaddr_in serv_addr; 
    int sent_recv_bytes;
    
-   int_socket_ser server = int_socket_ser(AF_INET, SOCK_STREAM, 0, UDP_PORT, destination);
+   int_socket_ser server = int_socket_ser();
    sockfd = server.get_sock();
    #ifdef debug
         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server socket created successfully with fd %d.", sockfd);
@@ -71,16 +71,7 @@ void init_int_socket()
         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server recvd %d bytes from client: %s", sent_recv_bytes, buffer);
     #endif
 
-    // string buf_string(buffer);
-    // string k_value{};
-    // int delim = buf_string.find(" ");
-    // action = buf_string.substr(0, delim);
-    // content = buf_string.substr(delim + 1, buf_string.length() - delim -1);
-    // uint16_t res;
     
-    
-    // string key = content.substr(0, content.find(" "));
-    // string value = content.erase(0, content.find(" ") + 1);
     mes_buf *mbuf = parse_buffer(buffer);
     string action{mbuf->act};
     string key{mbuf->cont};
@@ -90,50 +81,73 @@ void init_int_socket()
     #ifdef debug
         traceEvent(TRACE_LEVEL, TRACE_LEVEL_DEBUG, INFO, "Action is: %s, content is: %s", mbuf->act, mbuf->cont);
     #endif
-    if(action =="LOAD")
+
+    switch(action.c_str()[0])
     {
-        //string path = content;
-        res = load_resource(key);
+        case 'L':
+            res = load_resource(key);
         #ifdef debug
             traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Loading file in %s", key.c_str());
         #endif
-    }
-    else if(action == "GET")
-    {
-        //string key = content;
-        //string value;
-        res = get_value(key, k_value);
+            break;
+        case 'G':
+            res = get_value(key, k_value);
         #ifdef debug
             traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Geting value from key %s", key.c_str());
         #endif
-
-    }
-    else if(action == "SET")
-    {
-        //string key = content.substr(0, content.find(" "));
-        //string value = content.erase(0, content.find(" ") + 1);
-        //cout << "key is " << key << " and value is " << value << endl;
-        res = set_value(key, value);
+            break;
+        case 'S':
+            res = set_value(key, value);
         #ifdef debug
             traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Setting value %s for key %s", value.c_str(), key.c_str());
         #endif
-    }
-    else
-    {
-        res = 127;
+            break;
+        default:
+            res = 127;
         #ifdef debug
             traceEvent(TRACE_LEVEL, TRACE_LEVEL_ERROR, INFO, "Incorrect action.");
         #endif
     }
+    // if(action =="LOAD")
+    // {
+    //     //string path = content;
+    //     res = load_resource(key);
+    //     #ifdef debug
+    //         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Loading file in %s", key.c_str());
+    //     #endif
+    // }
+    // else if(action == "GET")
+    // {
+    //     //string key = content;
+    //     //string value;
+    //     res = get_value(key, k_value);
+    //     #ifdef debug
+    //         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Geting value from key %s", key.c_str());
+    //     #endif
+
+    // }
+    // else if(action == "SET")
+    // {
+    //     //string key = content.substr(0, content.find(" "));
+    //     //string value = content.erase(0, content.find(" ") + 1);
+    //     //cout << "key is " << key << " and value is " << value << endl;
+    //     res = set_value(key, value);
+    //     #ifdef debug
+    //         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Setting value %s for key %s", value.c_str(), key.c_str());
+    //     #endif
+    // }
+    // else
+    // {
+    //     res = 127;
+    //     #ifdef debug
+    //         traceEvent(TRACE_LEVEL, TRACE_LEVEL_ERROR, INFO, "Incorrect action.");
+    //     #endif
+    // }
         
 
     //memset(buffer, 0, BUF_SIZE);
     //sprintf(buffer, "%u %s\n", res, k_value.length() ? k_value.c_str() : "");
-    rep_buf *rbuf;
-    if(k_value.empty())
-        rbuf = init_rep_buf(res);
-    else
-        rbuf = init_rep_buf(res, k_value.c_str());
+    rep_buf *rbuf = init_rep_buf(res, k_value.c_str());
     
     create_server_buffer(rbuf, buffer);    
     

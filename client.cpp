@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 
    
    /* Create a socket point */
-   int_socket_cli client = int_socket_cli(AF_INET, SOCK_STREAM, 0, UDP_PORT, destination);
+   int_socket_cli client = int_socket_cli();
    sockfd = client.get_sock();
    #ifdef debug
       traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Client socket created successfully with fd %d!", sockfd);
@@ -35,19 +35,19 @@ int main(int argc, char *argv[])
       traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Client connected to server successfully!");
    #endif
 
-   //memset(buffer, 0, BUF_SIZE);
-   mes_buf *mbuf;
-   if(argc >= 4)
-      mbuf = init_mes_buf(tuppercase(argv[1] + 2), argv[2], argv[3]);
-   else
-      mbuf = init_mes_buf(tuppercase(argv[1] + 2), argv[2]);
 
-   //string action(argv[1]);
+   mes_buf *mbuf = ProcessArgs(argc, argv);
+   // if(argc >= 4)
+   //    mbuf = init_mes_buf(tuppercase(argv[1] + 2), argv[2], argv[3]);
+   // else
+   //    mbuf = init_mes_buf(tuppercase(argv[1] + 2), argv[2]);
+
    #ifdef debug
       traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Action is %s and key is %s", argv[1] + 2, argv[2]);
    #endif
 
    create_client_buffer(mbuf, buffer);
+   
 
    /* Send message to the server */
    

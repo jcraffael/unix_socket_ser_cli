@@ -12,8 +12,8 @@
 class int_socket_cli: public int_socket
 {
     public:
-    int_socket_cli(int domain, int type, int protocol, int port, char *ip_addr) :
-    int_socket(domain, type, protocol, port, ip_addr){
+    int_socket_cli() :
+    int_socket(){
         //set_connection(connect_to(get_sock(), get_addr()));
     };
     

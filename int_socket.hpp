@@ -22,7 +22,7 @@ class int_socket
     int connection;
 
     public:
-    int_socket(int domain, int type, int protocol, int port, char *ip_addr);
+    int_socket();
     ~int_socket();
     virtual int connect_to(int sockfd, struct sockaddr_in addr) = 0;
     int get_sock();

@@ -10,8 +10,8 @@ class int_socket_ser: public int_socket
     int newsockfd;
 
     public:
-    int_socket_ser(int domain, int type, int protocol, int port, char *ip_addr) :
-    int_socket(domain, type, protocol, port, ip_addr){
+    int_socket_ser() :
+    int_socket(){
         //set_connection(connect_to(get_sock(), get_addr()));
     };
     int binding(int sockfd, struct sockaddr_in addr);
