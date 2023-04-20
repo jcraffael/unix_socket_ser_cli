@@ -1,15 +1,14 @@
-#include <sys/types.h>
-#include <csignal>
 
 #include "libshared/libshared.hpp"
 #include "int_socket_ser.hpp"
 #include "utils.hpp"
 #include "mes_process.hpp"
+#include <sys/types.h>
+#include <csignal>
 //define BUF_SIZE 256
 #define debug 1
 using namespace std;
 
-//const vector<string>actions {"LOAD", "GET", "SET"};
 
 
 void signal_handler(int)
@@ -108,44 +107,7 @@ void init_int_socket()
             traceEvent(TRACE_LEVEL, TRACE_LEVEL_ERROR, INFO, "Incorrect action.");
         #endif
     }
-    // if(action =="LOAD")
-    // {
-    //     //string path = content;
-    //     res = load_resource(key);
-    //     #ifdef debug
-    //         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Loading file in %s", key.c_str());
-    //     #endif
-    // }
-    // else if(action == "GET")
-    // {
-    //     //string key = content;
-    //     //string value;
-    //     res = get_value(key, k_value);
-    //     #ifdef debug
-    //         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Geting value from key %s", key.c_str());
-    //     #endif
-
-    // }
-    // else if(action == "SET")
-    // {
-    //     //string key = content.substr(0, content.find(" "));
-    //     //string value = content.erase(0, content.find(" ") + 1);
-    //     //cout << "key is " << key << " and value is " << value << endl;
-    //     res = set_value(key, value);
-    //     #ifdef debug
-    //         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Setting value %s for key %s", value.c_str(), key.c_str());
-    //     #endif
-    // }
-    // else
-    // {
-    //     res = 127;
-    //     #ifdef debug
-    //         traceEvent(TRACE_LEVEL, TRACE_LEVEL_ERROR, INFO, "Incorrect action.");
-    //     #endif
-    // }
-        
-
-    //memset(buffer, 0, BUF_SIZE);
+   
     //sprintf(buffer, "%u %s\n", res, k_value.length() ? k_value.c_str() : "");
     rep_buf *rbuf = init_rep_buf(res, k_value.c_str());
     

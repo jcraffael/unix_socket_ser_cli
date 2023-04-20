@@ -5,7 +5,7 @@
 #include <getopt.h>
 //include <iostream>
 #include <stdio.h>
-//include <unistd.h>
+#include <stdlib.h>
 
 using namespace std;
 #define BUF_ACT 5
@@ -13,7 +13,6 @@ using namespace std;
 #define BUF_VAL 40
 #define BUF_SIZE BUF_ACT + BUF_CONT + BUF_VAL
 
-//const vector<string>actions {"--load", "--get", "--set"};
 
 typedef struct mes_buf
 {
@@ -46,16 +45,15 @@ void create_server_buffer(rep_buf *buf, char *buff);
 mes_buf *parse_buffer(char *buff);
 
 
-// void inline PrintHelp()
-// {
-//     std::cout <<
-//             "--num <n>:           Set number of program\n"
-//             "--beep:              Beep the user\n"
-//             "--sigma <val>:       Set sigma of program\n"
-//             "--writeFile <fname>: File to write to\n"
-//             "--help:              Show help\n";
-//     exit(1);
-// }
+void inline PrintHelp()
+{
+    puts(
+            "--load <path>:        Load a file into the filesystem\n"
+            "--get <key>:          Retrieve the value of the specific key in the file\n"
+            "--set <key> <val>:    Set value to a specific key\n"
+            "--help:               Show help\n");
+    exit(1);
+}
 
 
 mes_buf *ProcessArgs(int argc, char** argv);

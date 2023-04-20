@@ -8,11 +8,11 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-   if(argc < 3)
-   {
-      traceEvent(TRACE_LEVEL, TRACE_LEVEL_ERROR, INFO, "Arguments missing!");
-      exit(EXIT_FAILURE);
-   }
+   // if(argc < 3)
+   // {
+   //    traceEvent(TRACE_LEVEL, TRACE_LEVEL_ERROR, INFO, "Arguments missing!");
+   //    exit(EXIT_FAILURE);
+   // }
       
    int sockfd, sent_recv_bytes = 0;
    struct sockaddr_in serv_addr;

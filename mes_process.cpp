@@ -1,15 +1,15 @@
 #include "mes_process.hpp"
-//include "utils.hpp"
 
-mes_buf *init_mes_buf(char *act, char *cont, char *val)
-{
-    mes_buf *mbuf = new mes_buf();
-    memcpy(mbuf->act, act, BUF_ACT);
-    memcpy(mbuf->cont, cont, BUF_CONT);
-    if(val)
-        memcpy(mbuf->val, val, BUF_VAL);
-    return mbuf;
-}
+
+// mes_buf *init_mes_buf(char *act, char *cont, char *val)
+// {
+//     mes_buf *mbuf = new mes_buf();
+//     memcpy(mbuf->act, act, BUF_ACT);
+//     memcpy(mbuf->cont, cont, BUF_CONT);
+//     if(val)
+//         memcpy(mbuf->val, val, BUF_VAL);
+//     return mbuf;
+// }
 
 rep_buf *init_rep_buf(short res, const char *k_val)
 {
@@ -24,8 +24,7 @@ rep_buf *init_rep_buf(short res, const char *k_val)
 void create_client_buffer(mes_buf *buf, char *buff)
 {
     memset(buff, 0, BUF_SIZE);
-    size_t s = sizeof(mes_buf);
-    memcpy(buff, buf, s);
+    memcpy(buff, buf, sizeof(mes_buf));
 
 }
 
@@ -49,11 +48,13 @@ mes_buf *ProcessArgs(int argc, char** argv)
 {
 
     mes_buf *mbuf = new mes_buf();
-    
+    if(argc == 1)
+    {
+        perror("Missing argument!");
+        exit(EXIT_FAILURE);
+    }
     auto construct_mbuf = [](mes_buf *buf, const char *str, char *arg)
     {
-        if(!arg)
-            return 1;
         memcpy(buf->act, str, BUF_ACT);
         memcpy(buf->cont, arg, BUF_CONT);
     };
@@ -61,6 +62,7 @@ mes_buf *ProcessArgs(int argc, char** argv)
     int opt;
     while ((opt = getopt_long(argc, argv, short_opts, long_opts, nullptr)) != -1)
     {
+        
         switch (opt)
         {
         case 'l':
@@ -79,7 +81,7 @@ mes_buf *ProcessArgs(int argc, char** argv)
         case 'h': // -h or --help
         case '?': // Unrecognized option
         default:
-            //PrintHelp();
+            PrintHelp();
             break;
         }
     }
