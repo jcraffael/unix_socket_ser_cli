@@ -24,16 +24,11 @@ RC int_socket_ser::listen_to_connection(/*int sockfd, int num*/)
 RC int_socket_ser::connect_to(/*int sockfd, struct sockaddr_in addr*/)
 {
     int len = sizeof(addr);
-    newsockfd = accept(sockfd, (struct sockaddr *)&addr, (socklen_t *)&len);
-    if(newsockfd < 0)
+    newfd = accept(sockfd, (struct sockaddr *)&addr, (socklen_t *)&len);
+    if(newfd < 0)
     {
         perror("Error in accept ...");
         exit(RC_SOCKET_ERROR);
     }
     return RC_SUCCESS;
-}
-
-int int_socket_ser::get_newfd()
-{
-    return newsockfd;
 }

@@ -5,19 +5,15 @@
 #include "mes_process.hpp"
 #include <sys/types.h>
 #include <csignal>
-//define BUF_SIZE 256
+
 #define debug 1
 using namespace std;
-
-
 
 void signal_handler(int)
 {
     cout << "Received SIGINT, shutting down the server..." << endl;
     exit(EXIT_SUCCESS);
-
 }
-
 
 void init_int_socket()
 {
@@ -32,13 +28,11 @@ void init_int_socket()
    int_socket_ser server = int_socket_ser();
    //sockfd = server.get_sock();
    #ifdef debug
-        traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server socket created successfully with fd %d.", sockfd);
+        traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server socket created successfully");
     #endif
-   
-    
-    //serv_addr = server.get_addr();
-    server.binding(/*sockfd, serv_addr*/);
-    server.listen_to_connection(/*sockfd, 5*/);
+
+    server.binding();
+    server.listen_to_connection();
    #ifdef debug
         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server socket bond successfully and is listening ...");
     #endif
@@ -51,10 +45,10 @@ void init_int_socket()
         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server socket waiting for new connection ...");
     #endif
 
-    server.connect_to(/*sockfd, serv_addr*/);
-    //newsockfd = server.get_newfd();
+    server.connect_to();
+
     #ifdef debug
-        traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Connection accepted, waiting for data from the client through new sock %d.", newsockfd);
+        traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Connection accepted, waiting for data from the client through new sock.");
     #endif
     
     /* If connection is established then start communicating */
@@ -70,8 +64,6 @@ void init_int_socket()
         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server recvd %d bytes from client: %s", sent_recv_bytes, buffer);
     #endif
 
-    
-    //mes_buf *mbuf = parse_buffer(buffer);
     mes_process m_process = mes_process(buffer);
     string action{m_process.get_act()};
     string key{m_process.get_cont()};
@@ -79,7 +71,7 @@ void init_int_socket()
     short res{};
     string k_value{};
     #ifdef debug
-        //traceEvent(TRACE_LEVEL, TRACE_LEVEL_DEBUG, INFO, "Action is: %s, content is: %s", mbuf->act, mbuf->cont);
+        traceEvent(TRACE_LEVEL, TRACE_LEVEL_DEBUG, INFO, "Action is: %s, content is: %s", m_process.get_act(), m_process.get_cont());
     #endif
 
     switch(action.c_str()[0])
@@ -103,16 +95,15 @@ void init_int_socket()
         #endif
             break;
         default:
-            res = 127;
+            res = RC_GENERIC;
         #ifdef debug
             traceEvent(TRACE_LEVEL, TRACE_LEVEL_ERROR, INFO, "Incorrect action.");
         #endif
     }
    
     //sprintf(buffer, "%u %s\n", res, k_value.length() ? k_value.c_str() : "");
-    rep_process r_process = rep_process(res, k_value.c_str())
-    //rep_buf *rbuf = init_rep_buf(res, k_value.c_str());
-    
+    rep_process r_process = rep_process(res, k_value.c_str());
+
     r_process.create_server_buffer(buffer);    
     
     sent_recv_bytes = server.send_data(buffer, BUF_SIZE);
@@ -120,10 +111,6 @@ void init_int_socket()
     #ifdef debug
         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server sent %d bytes in reply to client: %s", sent_recv_bytes, buffer);
     #endif
-
-    //delete mbuf;
-    //delete rbuf;
-
    }
    
 }
@@ -133,5 +120,5 @@ main()
 
     init_int_socket();
 
-    exit(EXIT_SUCCESS);
+    return 0;
 }

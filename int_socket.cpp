@@ -41,19 +41,3 @@ int int_socket::send_data(char *buf, size_t buf_size)
     return sent_recv_bytes;
 }
 
-int int_socket::get_sock()
-{
-    return sockfd;
-}
-struct sockaddr_in int_socket::get_addr()
-{
-    return addr;
-}
-int int_socket::get_connection()
-{
-    return connection;
-}
-void int_socket::set_connection(int con)
-{
-    connection = con;
-}

@@ -1,6 +1,5 @@
 #include "utils.hpp"
 
-
 void traceEvent(int traceLevel, int eventTraceLevel,
 		       const char* file, const int line, const char * format, ...) {
   va_list va_ap;
@@ -76,11 +75,4 @@ void traceEvent(int traceLevel, int eventTraceLevel,
 
     va_end(va_ap);
   }
-}
-
-char *tuppercase(char *str)
-{
-   for(size_t i = 0; i < strlen(str); i++)
-      str[i] -= 32;
-   return str;
 }

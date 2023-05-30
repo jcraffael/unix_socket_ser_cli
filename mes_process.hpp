@@ -47,11 +47,11 @@ public:
     rep_process(short res, const char *k_va);
     rep_process(char *buff);
     void create_server_buffer(char *buff);
-    inline short rec_code() const (return new_rep->res;)
-    inline char* rec_val() const (return new_rep->k_val;)
+    inline short rec_code() const {return new_rep->res;}
+    inline char* rec_val() const {return new_rep->k_val;}
     
     ~rep_process();
-}
+};
 
 
 const char* const short_opts = "l:g:s:h";

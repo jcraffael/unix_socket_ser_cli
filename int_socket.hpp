@@ -18,7 +18,7 @@ inline char destination[] = "127.0.0.1";
 
 class int_socket
 {
-    private:
+    protected:
     struct sockaddr_in addr;
     int sockfd;
     int connection;
@@ -27,7 +27,7 @@ class int_socket
     public:
     int_socket();
     ~int_socket();
-    virtual int connect_to(/*int sockfd, struct sockaddr_in addr*/) = 0;
+    virtual RC connect_to(/*int sockfd, struct sockaddr_in addr*/) = 0;
     int receive_data(char *buf, size_t buf_size);
     int send_data(char *buf, size_t buf_size);
     // int get_sock();

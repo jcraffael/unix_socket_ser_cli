@@ -28,14 +28,10 @@ enum RC {
   RC_SENT_ERROR,
   RC_CONNECTION_ERROR,
   RC_ACCEPT_ERROR,
-  RC_UNIMPLEMENTED
+  RC_GENERIC = 255
 };
 
 void traceEvent(int traceLevel, int eventTraceLevel,
 		       const char* file, const int line, const char * format, ...);
-
-//char *tuppercase(char *str);
-
-
 
 #endif

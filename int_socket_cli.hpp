@@ -14,11 +14,11 @@ class int_socket_cli: public int_socket
     public:
     int_socket_cli() :
     int_socket(){
-        //set_connection(connect_to(get_sock(), get_addr()));
+       
     };
-    
-    int connect_to(/*int sockfd, struct sockaddr_in addr*/);
-
+    int_socket_cli(int_socket_cli& other) = delete;
+    int_socket_cli(int_socket_cli&& other) = delete;
+    RC connect_to(/*int sockfd, struct sockaddr_in addr*/);
 };
 
 #endif
