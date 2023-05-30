@@ -1,49 +1,57 @@
-CC = g++
-CFLAGS = -Wall -Wextra -g
-TARGET = server client libshared/libshared.so 
-LIBS = -L ./libshared -lshared -lrt
-OBJ = server.o client.o utils.o mes_process.o int_socket.o int_socket_ser.o int_socket_cli.o 
-BINS = server client
-#DEPSRC = libshared/libshared.cpp
-# default:
-# 	 $(CC) $(CFLAGS) -g server.cpp $(DEPSRC) -o server -lrt
-# 	 $(CC) $(CFLAGS) -g client.cpp $(DEPSRC) -o client -lrt
+# Thanks to Job Vranish (https://spin.atomicobject.com/2016/08/26/makefile-c-projects/)
+targetSer_SRC := server
+targetCli_SRC := client
 
-client: client.o int_socket_cli.o int_socket.o utils.o mes_process.o
-	$(CC) $(CFLAGS) client.o int_socket_cli.o int_socket.o utils.o mes_process.o -o client
+BUILD_DIR := ./build
+SRC_DIRS := ./src
 
-client.o: client.cpp int_socket_cli.hpp int_socket.hpp utils.hpp mes_process.hpp
-	$(CC) $(CFLAGS) -c client.cpp -o client.o
+# Find all the C and C++ files we want to compile
+# Note the single quotes around the * expressions. The shell will incorrectly expand these otherwise, but we want to send the * directly to the find command.
+SRCS_SER := $(shell find $(SRC_DIRS) -name '*.cpp' | grep -v client) # -or -name '*.c' -or -name '*.s')
+SRCS_CLI := $(shell find $(SRC_DIRS) -name '*.cpp' | grep -v server)
+# Prepends BUILD_DIR and appends .o to every src file
+# As an example, ./your_dir/hello.cpp turns into ./build/./your_dir/hello.cpp.o
+OBJS_SER := $(SRCS_SER:%=$(BUILD_DIR)/%.o)
+OBJS_CLI := $(SRCS_CLI:%=$(BUILD_DIR)/%.o)
+# String substitution (suffix version without %).
+# As an example, ./build/hello.cpp.o turns into ./build/hello.cpp.d
+DEPS := $(OBJS:.o=.d)
 
-server: server.o int_socket_ser.o int_socket.o utils.o mes_process.o libshared/libshared.so
-	$(CC) $(CFLAGS) server.o int_socket_ser.o int_socket.o utils.o mes_process.o -o server ${LIBS}
+# Every folder in ./src will need to be passed to GCC so that it can find header files
+INC_DIRS := $(shell find $(SRC_DIRS) -type d)
+# Add a prefix to INC_DIRS. So moduleA would become -ImoduleA. GCC understands this -I flag
+INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
-server.o: server.cpp int_socket_ser.hpp int_socket.hpp utils.hpp
-	$(CC) $(CFLAGS) -c -I libshared server.cpp -o server.o
+# The -MMD and -MP flags together generate Makefiles for us!
+# These files will have .d instead of .o as the output.
+CPPFLAGS := $(INC_FLAGS) -D debug -MMD -MP
 
-int_socket_ser.o: int_socket_ser.cpp 
-	$(CC) $(CFLAGS) -c int_socket_ser.cpp -o int_socket_ser.o
+# The final build step.
 
-int_socket_cli.o: int_socket_cli.cpp 
-	$(CC) $(CFLAGS) -c int_socket_cli.cpp -o int_socket_cli.o
+all: $(BUILD_DIR)/$(targetSer_SRC) $(BUILD_DIR)/$(targetCli_SRC)
 
-int_socket.o: int_socket.cpp 
-	$(CC) $(CFLAGS) -std=c++17 -c int_socket.cpp -o int_socket.o
-
-utils.o: utils.cpp
-	$(CC) $(CFLAGS) -c utils.cpp -o utils.o
-
-mes_process.o: mes_process.cpp
-	$(CC) $(CFLAGS) -c mes_process.cpp -o mes_process.o
-
-libshared/libshared.so:
-	(cd libshared; make)
-
-all: $(BINS)
-	make
-	(cd libshared; make)
+$(BUILD_DIR)/$(targetSer_SRC): $(OBJS_SER)
+	$(CXX) $(OBJS_SER) -o $@ $(LDFLAGS)
+$(BUILD_DIR)/$(targetCli_SRC): $(OBJS_CLI)
+	$(CXX) $(OBJS_CLI) -o $@ $(LDFLAGS)
 
 
+# Build step for C source
+#$(BUILD_DIR)/%.c.o: %.c
+#	mkdir -p $(dir $@)
+#	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+# Build step for C++ source
+$(BUILD_DIR)/%.cpp.o: %.cpp
+	mkdir -p $(dir $@)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+
+
+.PHONY: clean
 clean:
-	rm -f *.o
-	(cd libshared; make clean)
+	rm -r $(BUILD_DIR)
+
+# Include the .d makefiles. The - at the front suppresses the errors of missing
+# Makefiles. Initially, all the .d files will be missing, and we don't want those
+# errors to show up.
+-include $(DEPS)

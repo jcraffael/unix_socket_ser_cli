@@ -2,8 +2,13 @@
 
 export LD_LIBRARY_PATH=$(pwd)/libshared
 
+err() { echo "$1"; exit 1; }
 #test1
 echo "Now running test1"
+
+[ -f "$(pwd)/build/server" ] || err "Missing server, please compile"
+
+cd build
 ./server &
 sleep 1
 PID_SERV=$(ps aux | grep /server$ | grep -v "grep" | awk '{print $2}')
@@ -28,11 +33,11 @@ fi
 sleep 3
 echo
 echo "Now running test2"
-
-chmod 755  /tmp/example.ini
+[ -f "client" ] || err "Missing client, please compile"
+#chmod 755  /tmp/example.ini
 
 #./server &
-gnome-terminal -- $(pwd)/server 
+gnome-terminal -- ./server 
 ./client --load /tmp/example.ini 
 
 RET=$(echo $?)
