@@ -14,45 +14,42 @@ int main(int argc, char *argv[])
    //    exit(EXIT_FAILURE);
    // }
       
-   int sockfd, sent_recv_bytes = 0;
-   struct sockaddr_in serv_addr;
-   
+   //int sockfd, 
+   int sent_recv_bytes = 0;
+   //struct sockaddr_in serv_addr;
    
    char buffer[BUF_SIZE];
 
-   
    /* Create a socket point */
    int_socket_cli client = int_socket_cli();
-   sockfd = client.get_sock();
+   //sockfd = client.get_sock();
    #ifdef debug
       traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Client socket created successfully with fd %d!", sockfd);
    #endif
    
-   serv_addr = client.get_addr();
-   client.connect_to(sockfd, serv_addr);
+   //serv_addr = client.get_addr();
+   client.connect_to(/*sockfd, serv_addr*/);
 
    #ifdef debug
       traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Client connected to server successfully!");
    #endif
 
 
-   mes_buf *mbuf = ProcessArgs(argc, argv);
-   // if(argc >= 4)
-   //    mbuf = init_mes_buf(tuppercase(argv[1] + 2), argv[2], argv[3]);
-   // else
-   //    mbuf = init_mes_buf(tuppercase(argv[1] + 2), argv[2]);
+   //mes_buf *mbuf = ProcessArgs(argc, argv);
+   mes_process s_message = mes_process(argc, argv);
+
 
    #ifdef debug
       traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Action is %s and key is %s", argv[1] + 2, argv[2]);
    #endif
 
-   create_client_buffer(mbuf, buffer);
+   s_message.create_client_buffer(buffer);
    
 
    /* Send message to the server */
    
    //cout << "Buffer:" << buffer << endl;
-   sent_recv_bytes = write(sockfd, buffer, BUF_SIZE);
+   sent_recv_bytes = client.send_data(buffer, BUF_SIZE);
    
    if (sent_recv_bytes < 0) {
       perror("ERROR writing to socket");
@@ -64,20 +61,20 @@ int main(int argc, char *argv[])
 
    /* Now read server response */
    memset(buffer, 0, BUF_SIZE);
-   sent_recv_bytes = read(sockfd, buffer, BUF_SIZE);
+   sent_recv_bytes = client.receive_data(buffer, BUF_SIZE);
    
    if (sent_recv_bytes < 0) {
       perror("ERROR reading from socket");
       exit(EXIT_FAILURE);
    }
 
-   rep_buf *rbuf = (rep_buf *)buffer;
-
+   //rep_buf *rbuf = (rep_buf *)buffer;
+   rep_process r_message = rep_process(buffer);
 	#ifdef debug
-      traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Reply from server: %d %s", rbuf->res, rbuf->k_val);
+      traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Reply from server: %d %s", r_message.rec_code(), r_message.rec_val());
    #endif
 
-   delete mbuf;
+   //delete mbuf;
    //cout << buffer << endl;
    return 0;
 }

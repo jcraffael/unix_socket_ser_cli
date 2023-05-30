@@ -3,10 +3,11 @@
 int_socket::int_socket(/*int domain, int type, int protocol, int port, char* ip_addr*/)
 {
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    newfd = -1;
     if(sockfd < 0)
     {
         perror("Error opening socket ...");
-        exit(1);
+        exit(RC_SOCKET_ERROR);
     }
     
     addr.sin_family = AF_INET;
@@ -17,6 +18,27 @@ int_socket::~int_socket()
 {
     if(sockfd > 0)
         close(sockfd);
+}
+
+int int_socket::receive_data(char *buf, size_t buf_size)
+{
+    int fd_ = newfd == -1 ? sockfd : newfd;
+    int sent_recv_bytes = read(fd_, buf, buf_size);
+    // if (sent_recv_bytes < 0) {
+    //     perror("ERROR reading from socket");
+    //     return(RC_RECV_ERROR);
+    // }
+    return sent_recv_bytes;
+}
+int int_socket::send_data(char *buf, size_t buf_size)
+{
+    int fd_ = newfd == -1 ? sockfd : newfd;
+    int sent_recv_bytes = write(fd_, buf, buf_size);
+    // if (sent_recv_bytes < 0) {
+    //     perror("ERROR reading from socket");
+    //     return(RC_RECV_ERROR);
+    // }
+    return sent_recv_bytes;
 }
 
 int int_socket::get_sock()
@@ -35,13 +57,3 @@ void int_socket::set_connection(int con)
 {
     connection = con;
 }
-
-// int int_socket::test_connection()
-// {
-//     if(connection < 0)
-//     {
-//         perror("Error in connection ...");
-//         exit(2);
-//     }
-//     return 0;
-// }

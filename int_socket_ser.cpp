@@ -1,52 +1,37 @@
 #include "int_socket_ser.hpp"
 
-int int_socket_ser::binding(int sockfd, struct sockaddr_in addr)
+RC int_socket_ser::binding(/*int sockfd, struct sockaddr_in addr*/)
 {
     
     if(bind(sockfd, (struct sockaddr *) &addr, sizeof(addr)) < 0)
     {
-        perror("Error in binging ...");
-        exit(3);
+        perror("Error in binding ...");
+        exit(RC_SOCKET_ERROR);
     }
-    return 0;
+    return RC_SUCCESS;
 }
 
-int int_socket_ser::listen_to_connection(int sockfd, int num)
+RC int_socket_ser::listen_to_connection(/*int sockfd, int num*/)
 {
-    if(listen(sockfd, num) < 0)
+    if(listen(sockfd, 5) < 0)
     {
         perror("Error in listening ...");
-        exit(3);
+        exit(RC_SOCKET_ERROR);
     }
-    return 0;
+    return RC_SUCCESS;
 }
 
-int int_socket_ser::connect_to(int sockfd, struct sockaddr_in addr)
+RC int_socket_ser::connect_to(/*int sockfd, struct sockaddr_in addr*/)
 {
     int len = sizeof(addr);
     newsockfd = accept(sockfd, (struct sockaddr *)&addr, (socklen_t *)&len);
     if(newsockfd < 0)
     {
         perror("Error in accept ...");
-        exit(4);
+        exit(RC_SOCKET_ERROR);
     }
-    return 0;
+    return RC_SUCCESS;
 }
-
-// void int_socket_ser::set_newfd()
-// {
-//     newsockfd = accept_new_connection(get_sock(), get_addr());
-// }
-
-// int int_socket_ser::test_new_connection()
-// {
-//     if(newsockfd < 0)
-//     {
-//         perror("Error in accept ...");
-//         exit(4);
-//     }
-//     return 0;
-// }
 
 int int_socket_ser::get_newfd()
 {

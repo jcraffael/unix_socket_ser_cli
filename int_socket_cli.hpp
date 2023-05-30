@@ -17,9 +17,7 @@ class int_socket_cli: public int_socket
         //set_connection(connect_to(get_sock(), get_addr()));
     };
     
-    int connect_to(int sockfd, struct sockaddr_in addr);
-    
-    
+    int connect_to(/*int sockfd, struct sockaddr_in addr*/);
 
 };
 
