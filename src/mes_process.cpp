@@ -6,7 +6,7 @@ mes_process::mes_process(char *buff)
     memcpy(new_message->act, buff, BUF_ACT);
     memcpy(new_message->cont, buff + BUF_ACT, BUF_CONT);
     memcpy(new_message->val, buff + BUF_ACT + BUF_CONT, BUF_VAL);
-    //return new_message;
+
 }
 
 mes_process::~mes_process()
@@ -19,17 +19,15 @@ void mes_process::create_client_buffer(char *buff)
 {
     memset(buff, 0, BUF_SIZE);
     memcpy(buff, new_message, sizeof(mes_buf));
-
 }
 
 mes_process::mes_process(int argc, char** argv)
 {
-
     new_message = new mes_buf();
     if(argc == 1)
     {
-        perror("Missing argument!");
-        exit(EXIT_FAILURE);
+        //perror("Missing argument!");
+        throw RC_MISS_ARGS;
     }
     auto construct_mbuf = [](mes_buf *buf, const char *str, char *arg)
     {
@@ -55,11 +53,14 @@ mes_process::mes_process(int argc, char** argv)
             if(argc > 3)
                 memcpy(new_message->val, argv[3], BUF_VAL);
             break;
+        case 'v':
+            TRACE_LEVEL = 3;
+            break;
         case 'h': // -h or --help
         case '?': // Unrecognized option
         default:
             PrintHelp();
-            break;
+            throw RC_MISS_ARGS;
         }
     }
     //return mbuf;

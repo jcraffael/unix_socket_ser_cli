@@ -99,7 +99,6 @@ fstream in_file;
 unsigned short load_resource(string path)
 {
     path_val = path;
-    
     in_file.open(path, ios::out);
     if(!in_file.is_open()) 
     {
@@ -116,10 +115,6 @@ unsigned short load_resource(string path)
 
 unsigned short get_value(const string& key, string& value)
 {
-     
-    //char buffer[BUF_SIZE];
-    //memset(buffer, 0, BUF_SIZE);
-    //int res = _get_buffer(buffer);
     string line {};
     if(!path_val.empty())
     {
@@ -138,7 +133,6 @@ unsigned short get_value(const string& key, string& value)
                 in_file.close();
                 return 0;
             }
-                
         }
         in_file.close();
 
@@ -152,9 +146,6 @@ unsigned short get_value(const string& key, string& value)
 
 unsigned short set_value(const std::string& key, const std::string &value)
 {
-    // char buffer[BUF_SIZE];
-    // memset(buffer, 0, BUF_SIZE);
-    //int res = _get_buffer(buffer);
     string line {};
     
     if(!path_val.empty())
@@ -197,24 +188,10 @@ unsigned short set_value(const std::string& key, const std::string &value)
         in_file.open(path_val, fstream::in | fstream::out | fstream::app);
 	
         in_file << key << " : " << value << endl;
-        // while(getline(in_file, line))
-        // {
-        //     if(line.find(key)!= string::npos)
-        //     {
-        //         //line.replace(key.length() + 3, line.length() - key.length() - 3, value);
-        //         line.replace(0, line.length(), "");
-        //         cout << "Value replaced " << endl;
-        //         in_file.close();
-        //         return 0;
-        //     }
-                
-        // }
 
         in_file.close();
         return 0;
-       
     }
-    
     perror("No file available ...");
     return 255;
 }

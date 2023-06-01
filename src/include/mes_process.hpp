@@ -1,8 +1,9 @@
 #ifndef MESS_H_
 #define MESS_H_
 
+#include "utils.hpp"
 #include <cstring>
-#include <getopt.h>
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,36 +53,6 @@ public:
     
     ~rep_process();
 };
-
-
-const char* const short_opts = "l:g:s:h";
-const option long_opts[] = {
-        {"load", required_argument, nullptr, 'l'},
-        {"get", required_argument, nullptr, 'g'},
-        {"set", required_argument, nullptr, 's'},
-        {"help", no_argument, nullptr, 'h'},
-        {nullptr, no_argument, nullptr, 0}
-};
-
-
-// rep_buf *init_rep_buf(short res, const char *k_val);
-// void create_client_buffer(mes_buf *buf, char *buff);
-// void create_server_buffer(rep_buf *buf, char *buff);
-// mes_buf *parse_buffer(char *buff);
-
-
-void inline PrintHelp()
-{
-    puts(
-            "--load <path>:        Load a file into the filesystem\n"
-            "--get <key>:          Retrieve the value of the specific key in the file\n"
-            "--set <key> <val>:    Set value to a specific key\n"
-            "--help:               Show help\n");
-    exit(1);
-}
-
-
-//mes_buf *ProcessArgs(int argc, char** argv);
 
 
 #endif

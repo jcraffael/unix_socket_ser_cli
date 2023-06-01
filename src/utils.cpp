@@ -8,8 +8,8 @@ void traceEvent(int traceLevel, int eventTraceLevel,
   
   switch(eventTraceLevel)
   {
-    case TRACE_LEVEL_DISABLE:
-        return;
+    // case TRACE_LEVEL_DISABLE:
+    //     return;
     case TRACE_LEVEL_ERROR:
         extra_msg = "ERROR: ";
         break;
