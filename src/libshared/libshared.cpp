@@ -102,15 +102,12 @@ unsigned short load_resource(string path)
     in_file.open(path, ios::out);
     if(!in_file.is_open()) 
     {
-        perror("Resource file open error ..."); 
+        //perror("Resource file open error ..."); 
         return 1;
     }
-
     in_file.close();
 
     return 0;
-    
-
 }
 
 unsigned short get_value(const string& key, string& value)
@@ -121,25 +118,23 @@ unsigned short get_value(const string& key, string& value)
         in_file.open(path_val, fstream::in);
         if(!in_file.is_open()) 
         {
-            perror("Resource file open error ..."); 
-            return 1;
+            //perror("Resource file open error ..."); 
+            return 4;
         }
         while(getline(in_file, line))
         {
             if(line.find(key)!= string::npos)
             {
                 value = line.substr(key.length() + 3, line.length() - key.length() - 3);
-                cout << "key is " << key << " value is " << value << endl;
+                //cout << "key is " << key << " value is " << value << endl;
                 in_file.close();
                 return 0;
             }
         }
         in_file.close();
-
         return 3;
-
     }
-    perror("No file available ...");
+    //perror("No file available ...");
     return 255;
 
 }
@@ -154,8 +149,8 @@ unsigned short set_value(const std::string& key, const std::string &value)
         //cout << "File " << path_val << " opened correctly" << endl;
         if(!in_file.is_open()) 
         {
-            perror("Resource file open error ..."); 
-            return 1;
+            //perror("Resource file open error ..."); 
+            return 4;
         }
 
         /* Output the content of the file to a string */
@@ -171,7 +166,7 @@ unsigned short set_value(const std::string& key, const std::string &value)
                 size_t pos_break;
                 if((pos_break = text.find("\n", pos)) == string::npos) 
                 {
-                    cout << "Error reading file." << endl;
+                    //cout << "Error reading file." << endl;
                     in_file.close();
                     return 255;
                 }
@@ -188,10 +183,9 @@ unsigned short set_value(const std::string& key, const std::string &value)
         in_file.open(path_val, fstream::in | fstream::out | fstream::app);
 	
         in_file << key << " : " << value << endl;
-
         in_file.close();
         return 0;
     }
-    perror("No file available ...");
+    //perror("No file available ...");
     return 255;
 }

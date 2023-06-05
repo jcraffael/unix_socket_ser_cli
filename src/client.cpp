@@ -8,12 +8,6 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-   // if(argc < 3)
-   // {
-   //    traceEvent(TRACE_LEVEL, TRACE_LEVEL_ERROR, INFO, "Arguments missing!");
-   //    exit(EXIT_FAILURE);
-   // }
- 
    int sent_recv_bytes = 0;
    char buffer[BUF_SIZE];
 
@@ -33,7 +27,7 @@ int main(int argc, char *argv[])
    /* Create a socket point */
    try
    {
-      int_socket_cli client = int_socket_cli();
+      int_socket_cli client;// = int_socket_cli();
 
       traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Client socket created successfully!");
       client.connect_to();
@@ -49,30 +43,7 @@ int main(int argc, char *argv[])
       exit(e);
    }
 
-
-   
-   
-   /* Send message to the server */
-   //cout << "Buffer:" << buffer << endl;
-   
-   
-   // if (sent_recv_bytes < 0) {
-   //    traceEvent(TRACE_LEVEL, TRACE_LEVEL_ERROR, INFO, "ERROR writing to socket, exit...");
-   //    exit(RC_SENT_ERROR);
-   // }
-    
-   
-
-   /* Now read server response */
-   
-   
-   // if (sent_recv_bytes < 0) {
-   //    traceEvent(TRACE_LEVEL, TRACE_LEVEL_ERROR, INFO, "ERROR reading from socket, exit...");
-   //    exit(RC_RECV_ERROR);
-   // }
-
    rep_process r_message = rep_process(buffer);
-	 
    traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Reply from server: %d %s", r_message.rec_code(), r_message.rec_val());
 
    return 0;

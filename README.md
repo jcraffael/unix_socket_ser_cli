@@ -1,10 +1,10 @@
 # unix_socket_ser_cli
 
-1.A C++ shared library able to parse a simple INI file with the following publicinterfaces:
+1.A C++ shared library able to parse a simple INI file with the following public interfaces:
 
   ```unsigned short load_resource(const std::string& path);```
 
-allows an application to load and parse in volatile memory a INI resource filelocated in a standard Linux file system. example:
+allows an application to load and parse in volatile memory a INI resource file located in a standard Linux file system. example:
 
   ```unsigned short res =load_resource(“/tmp/example.ini”);```
 
@@ -18,7 +18,7 @@ allows an application to retrieve the value of a key available in a previously l
 
 return values: 0 in case of success, 3 in case of missing key, 4 in case a resource file has not been loaded yet, 255 in case of generic error
 
-  ```unsigned short set_value(const std::string& key, conststd::string &value);```
+  ```unsigned short set_value(const std::string& key, const std::string &value);```
 
 allows an application to store the value of a key in a previously loaded INI file. This adds or replace the new key/value pair both in the volatile memory and in the INI file on the file system. example:
 
@@ -28,7 +28,7 @@ allows an application to store the value of a key in a previously loaded INI fil
 
 2.A C++ Server application able to use the above mentioned shared library and to expose a basic API to localhost:12345. The server shall expose the following APIs(every API must end with a \n character):
 
-○ LOAD PATH will load the INI file specified by the PATH argument (by calling theload_resource library API)return values: the same returned by the library followed by a \n character, or127\n in case of unknown command. 
+○ LOAD PATH will load the INI file specified by the PATH argument (by calling theload_resource library API)return values: the same returned by the library followed by a \n character, or 127\n in case of unknown command. 
 
   **example: "LOAD /tmp/example.ini\n" -> "0\n"**
 
@@ -41,13 +41,13 @@ return values: the same returned by the library followed by a \n character, or 1
 
   **example: "SET section.color.red roses are red\" -> "0\n"**
 
-3.A C++ Client application exposing a user a basic CLI allowing a user to request theserver to perform the above TCP requets to the Server:
+3.A C++ Client application exposing a user a basic CLI allowing a user to request the server to perform the above TCP requets to the Server:
 
-**./client --load /tmp/example.ini** -> triggers the LOAD PATHServer API and prints the results to standard output
+**./client --load /tmp/example.ini** -> triggers the LOAD PATH Server API and prints the results to standard output
 
-**./client --get section.foo.bar** -> triggers the GET KEY ServerAPI and prints the results to standard output
+**./client --get section.foo.bar** -> triggers the GET KEY Server API and prints the results to standard output
 
-**./client --set section.color.red "roses are red"** -> triggersthe SET KEY VALUE Server API and prints the results to standard output
+**./client --set section.color.red "roses are red"** -> triggers the SET KEY VALUE Server API and prints the results to standard output
 
 4.A simple bash script to be used to test the system:
 
@@ -71,4 +71,4 @@ Simplified INI file reference:[section]foo.bar = some value
 
 Note for configuration:
 
-Inside util.hpp it's possible to configure the log file and logging level
+Inside util.hpp it's possible to configure the log file

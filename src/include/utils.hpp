@@ -28,7 +28,7 @@ enum RC {
   RC_ACCEPT_ERROR,
   RC_RECV_ERROR,
   RC_SENT_ERROR,
-  RC_GENERIC = 255
+  RC_GENERIC = 127
 };
 
 inline const char *log_msg[] = {
