@@ -3,11 +3,9 @@
 int_socket::int_socket(/*int domain, int type, int protocol, int port, char* ip_addr*/)
 {
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    newfd = -1;
+    //newfd = -1;
     if(sockfd < 0)
     {
-        //perror("Error opening socket ...");
-        //exit(RC_SOCKET_ERROR);
         throw RC_SOCKET_ERROR;
     }
     
@@ -21,26 +19,37 @@ int_socket::~int_socket()
         close(sockfd);
 }
 
-int int_socket::receive_data(char *buf, size_t buf_size)
+RC int_socket::binding(/*int sockfd, struct sockaddr_in addr*/)
 {
-    int fd_ = newfd == -1 ? sockfd : newfd;
-    int sent_recv_bytes = read(fd_, buf, buf_size);
-    if (sent_recv_bytes < 0) {
-        //perror("ERROR reading from socket");
-        //return(RC_RECV_ERROR);
-        throw RC_RECV_ERROR;
+    
+    if(bind(sockfd, (struct sockaddr *) &addr, sizeof(addr)) < 0)
+    {
+        //perror("Error in binding ...");
+        //exit(RC_SOCKET_ERROR);
+        throw RC_SOCKET_ERROR;
     }
-    return sent_recv_bytes;
-}
-int int_socket::send_data(char *buf, size_t buf_size)
-{
-    int fd_ = newfd == -1 ? sockfd : newfd;
-    int sent_recv_bytes = write(fd_, buf, buf_size);
-     if (sent_recv_bytes < 0) {
-    //     perror("ERROR reading from socket");
-    //     return(RC_RECV_ERROR);
-        throw RC_RECV_ERROR;
-     }
-    return sent_recv_bytes;
+    return RC_SUCCESS;
 }
 
+RC int_socket::listen_to_connection(/*int sockfd, int num*/)
+{
+    if(listen(sockfd, 5) < 0)
+    {
+        //perror("Error in listening ...");
+        //exit(RC_SOCKET_ERROR);
+        throw RC_SOCKET_ERROR;
+    }
+    return RC_SUCCESS;
+}
+
+RC int_socket::connect_to()
+{
+    int len = sizeof(addr);
+    if(connect(sockfd, (struct sockaddr *)&addr, len))
+    {
+        //perror("Error in connect ...");
+        //exit(RC_CONNECTION_ERROR);
+        throw RC_CONNECTION_ERROR;
+    }
+    return RC_SUCCESS;
+}

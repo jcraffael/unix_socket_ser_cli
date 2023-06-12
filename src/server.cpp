@@ -1,8 +1,8 @@
 
 #include "libshared/libshared.hpp"
-#include "int_socket_ser.hpp"
+#include "tcp_endpoint.hpp"
 #include "utils.hpp"
-#include "mes_process.hpp"
+//include "mes_process.hpp"
 #include <sys/types.h>
 #include <csignal>
 
@@ -23,17 +23,14 @@ void init_int_socket()
     short res{};
     string k_value{};
 
-   char buffer[BUF_SIZE];
-   
    int sent_recv_bytes;
    
-   int_socket_ser *server;
+   tcp_endpoint *server;
     try
     {
-        server = new int_socket_ser();
+        server = new tcp_endpoint(1);
         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server socket created successfully");
-        server->binding();
-        server->listen_to_connection();
+        
         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server socket bond successfully and is listening ...");
     }
     catch(const RC &e)
@@ -46,15 +43,13 @@ void init_int_socket()
    {
     signal(SIGINT, signal_handler);//(sighandler_t *)signal_handler);
     traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server socket waiting for new connection ...");
-    
     try
     {
-        server->connect_to();
+        server->new_connection();
         traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Connection accepted, waiting for data from the client through new sock.");
-        
+
         /* If connection is established then start communicating */
-        memset(buffer, 0, BUF_SIZE);
-        sent_recv_bytes = server->receive_data(buffer, BUF_SIZE);
+        sent_recv_bytes = server->receive_data();
     }
     catch(const RC &e)
     {
@@ -62,8 +57,8 @@ void init_int_socket()
         continue;
     }
  
-    traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server recvd %d bytes from client: %s", sent_recv_bytes, buffer);
-    mes_process m_process = mes_process(buffer);
+    traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server recvd %d bytes from client: %s", sent_recv_bytes, server->get_buf());
+    mes_process m_process(server->get_buf());
     action = m_process.get_act();
     key = m_process.get_cont();
     value = m_process.get_val();
@@ -101,16 +96,15 @@ void init_int_socket()
         default:
             res = RC_GENERIC;        
             traceEvent(TRACE_LEVEL, TRACE_LEVEL_ERROR, INFO, "Incorrect action.");
-
     }
  
-    rep_process r_process = rep_process(res, k_value.c_str());
-    r_process.create_server_buffer(buffer);    
+    rep_process r_process(res, k_value.c_str());
 
     try
     {
-        sent_recv_bytes = server->send_data(buffer, BUF_SIZE);
-        traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server sent %d bytes in reply to client: %s", sent_recv_bytes, buffer);
+        server->set_buf((char *)(r_process.get_message()), BUF_SIZE);
+        sent_recv_bytes = server->send_data();
+        traceEvent(TRACE_LEVEL, TRACE_LEVEL_NORMAL, INFO, "Server sent %d bytes in reply to client: %s", sent_recv_bytes, server->get_buf());
     }
     catch(const RC &e)
     {
@@ -126,6 +120,5 @@ main()
 {
 
     init_int_socket();
-
     return 0;
 }

@@ -3,8 +3,6 @@
 
 #include "utils.hpp"
 #include <cstring>
-
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -28,10 +26,11 @@ mes_buf *new_message;
 public:
     mes_process(char *buff);
     mes_process(int argc, char** argv);
-    void create_client_buffer(char *buff);
+    //void create_client_buffer(char *buff);
     inline char* get_act() const { return new_message->act;}
     inline char* get_cont() const { return new_message->cont;}
     inline char* get_val() const { return new_message->val;}
+    mes_buf *get_message() const { return new_message;}
     ~mes_process();
 };
 
@@ -47,10 +46,10 @@ private:
 public:
     rep_process(short res, const char *k_val);
     rep_process(char *buff);
-    void create_server_buffer(char *buff);
+    //void create_server_buffer(char *buff);
     inline short rec_code() const {return new_rep->res;}
     inline char* rec_val() const {return new_rep->k_val;}
-    
+    rep_buf *get_message() const { return new_rep;}
     ~rep_process();
 };
 

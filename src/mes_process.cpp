@@ -6,7 +6,6 @@ mes_process::mes_process(char *buff)
     memcpy(new_message->act, buff, BUF_ACT);
     memcpy(new_message->cont, buff + BUF_ACT, BUF_CONT);
     memcpy(new_message->val, buff + BUF_ACT + BUF_CONT, BUF_VAL);
-
 }
 
 mes_process::~mes_process()
@@ -15,11 +14,11 @@ mes_process::~mes_process()
         delete new_message;
 }
 
-void mes_process::create_client_buffer(char *buff)
-{
-    memset(buff, 0, BUF_SIZE);
-    memcpy(buff, new_message, sizeof(mes_buf));
-}
+// void mes_process::create_client_buffer(char *buff)
+// {
+//     memset(buff, 0, BUF_SIZE);
+//     memcpy(buff, new_message, sizeof(mes_buf));
+// }
 
 mes_process::mes_process(int argc, char** argv)
 {
@@ -80,11 +79,11 @@ rep_process::rep_process(char *buff)
     new_rep = new rep_buf();
     memcpy(new_rep, buff, sizeof(rep_buf));
 }
-void rep_process::create_server_buffer(char *buff)
-{
-    memset(buff, 0, BUF_SIZE);
-    memcpy(buff, new_rep, sizeof(rep_buf));
-}
+// void rep_process::create_server_buffer(char *buff)
+// {
+//     memset(buff, 0, BUF_SIZE);
+//     memcpy(buff, new_rep, sizeof(rep_buf));
+// }
 
 rep_process::~rep_process()
 {
